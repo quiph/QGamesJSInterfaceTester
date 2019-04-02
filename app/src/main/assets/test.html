@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+
+    function getValueFromAndroid(){
+        var x = new Date();
+        var token = QTalkApp.getUserAuthToken()
+
+        var y = new Date();
+
+        console.log("Difference: " + (y.getTime() - x.getTime()))
+        return token;
+    }
+
+    function onReceive(message){
+        document.getElementById("callback").innerHTML = message;
+    }
+
+function myFunction() {
+  document.getElementById("demo").innerHTML = getValueFromAndroid();
+}
+
+    </script>
+</head>
+<body>
+
+<h2>JavaScript in Head</h2>
+
+<p id="demo">A Paragraph.</p>
+
+<p id="callback">Callback</p>
+
+<button type="button" onclick="myFunction()">Try it</button>
+
+</body>
+</html>
