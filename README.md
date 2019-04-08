@@ -32,16 +32,30 @@ Reponse:
     {
       "isTokenValid" : Boolean,
       "userId" : String (nullable),
+      "userDetails": {
+         "displayName": String (nullable)
+       }
     }
     ``` 
     Else: 
         Respone code: 401 (Unauthorized)
 
+**Note:** The base url mentioned here is for the staging server, for the url for the production server please submit your web app for review [here](https://forms.gle/mir2dCUmAD1x44KW8)
+
 ## Testing steps
 
-1. To test with the underlying `test.html` file type "test-url" when prompted for a URL
+1. To test with the underlying `test.html` file type "test-url" when prompted for a URL. [Link](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html)
+ to the test HTML file
 2. To test with an actual website put the link of the website as it is. The logs in `console.log` are visible in ADB logs.
 
+## Testing with 'test users'
+
+1. The QTalk backend has provision for 3 'test users', their tokens are present in the application. 
+2. Use the value of these tokens to hit the staging server with the request URL mentioned above, just append the url param with `isTestUser=true`, final url should look something like this, 
+"https://staging.remote.qtalk.io/v1/verifyAuthIdToken?isTestUser=true"
+3. This will evaluate the current token as a test user and will return the the corresponding user details as well. (QTalk Test 1, QTalk Test 2 etc..)
+4. Note that this will **only** work with the **Staging** server and will return an HTTP **UNAUTHORIZED** if used with the production server and will fail if the token used
+is not of a test user. 
 
 ### Download the APK: 
 

@@ -13,9 +13,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Press button below"
+            android:id="@+id/mainText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+    <androidx.appcompat.widget.AppCompatButton android:layout_width="wrap_content"
+                                               android:layout_height="wrap_content"
+                                               app:layout_constraintStart_toStartOf="parent"
+                                               app:layout_constraintTop_toBottomOf="@id/mainText"
+                                               app:layout_constraintEnd_toEndOf="parent"
+                                               android:layout_marginTop="8dp"
+                                               android:text="Select User"
+                                               android:id="@+id/selectUserButton"
+                                               android:padding="8dp"
+                                               android:textColor="@android:color/white"
+                                               android:background="@drawable/custom_bg_8dp_primary"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package io.qtalk.qgamejsinterfacetester
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Patterns
 import android.view.Menu
@@ -8,7 +9,39 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.listItems
+import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
+import io.qtalk.qgamejsinterfacetester.helpers.QTalkTestUsers
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
+import java.nio.charset.Charset
+import java.security.MessageDigest
+
+fun ByteArray.toHexString(): String {
+    val hexString = StringBuilder()
+
+    for (i in indices) {
+        val hex = Integer.toHexString(0xFF and this[i].toInt())
+        if (hex.length == 1) {
+            hexString.append('0')
+        }
+        hexString.append(hex)
+    }
+
+    return hexString.toString()
+}
+
+fun String.generateSHA1(): String{
+    return MessageDigest.getInstance("SHA-1")
+        .digest(this.toByteArray(Charset.forName("UTF-8")))
+        .toHexString()
+}
+
+fun String.generateMD5(): String{
+    return MessageDigest.getInstance("MD5")
+        .digest(this.toByteArray(Charset.forName("UTF-8")))
+        .toHexString()
+}
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +66,34 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 .show()
+        }
+
+        refreshSelectedUser()
+
+        selectUserButton.setOnClickListener {
+            MaterialDialog(this)
+                .title(text = "Select User")
+                .show {
+                    listItems(items = QTalkTestUsers.values().map { it.displayName }) { _, index, _ ->
+                        PreferenceManager.writeString(this@MainActivity, PreferenceManager.KEY_SELECTED_USER, QTalkTestUsers.values()[index].userName)
+                        refreshSelectedUser()
+                        dismiss()
+                    }
+                }
+
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun refreshSelectedUser() {
+        // test user profiles.
+        val selectedUser = PreferenceManager.getString(this, PreferenceManager.KEY_SELECTED_USER)
+        if (selectedUser == null) {
+            mainText.text = "No User selected will return a test token!"
+        } else {
+            mainText.text = "Current Selected user is: \"${
+            QTalkTestUsers.values().firstOrNull { it.userName == selectedUser }?.displayName
+            }\""
         }
     }
 
