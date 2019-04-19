@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
 import kotlinx.android.synthetic.main.webview_fragment.*
@@ -90,6 +91,16 @@ class WebViewFragment: Fragment() {
         @JavascriptInterface
         fun getUserAuthToken(): String {
             return PreferenceManager.getString(context, PreferenceManager.KEY_SELECTED_USER)?.generateSHA1() ?: TEST_TOKEN
+        }
+
+        @JavascriptInterface
+        fun setGameRoundStarted(gameData: String){
+            Toast.makeText(context, "data : $gameData", Toast.LENGTH_LONG).show()
+        }
+
+        @JavascriptInterface
+        fun setGameRoundEnded(gameData: String){
+            Toast.makeText(context, "data : $gameData", Toast.LENGTH_LONG).show()
         }
     }
 }
