@@ -57,6 +57,29 @@ Reponse:
 4. Note that this will **only** work with the **Staging** server and will return an HTTP **UNAUTHORIZED** if used with the production server and will fail if the token used
 is not of a test user. 
 
+## Sending 'gameRoundStarted' and 'gameRoundEnded' events to client WebView
+
+Send game data in the following form 
+
+    ```json
+    {
+      "gameName" : String,
+      "startTime" : Long,
+      "endTime": Long
+    }
+    ``` 
+    
+by calling the following methods in the JSInterface.
+
+```jshint
+QTalkApp.setGameRoundStarted(String json)
+```
+
+```jshint
+QTalkApp.setGameRoundEnded(String json)
+```
+
+
 ### Download the APK: 
 
 Check the releases section [here](https://github.com/quiph/QGamesJSInterfaceTester/releases) for the latest apk. 
