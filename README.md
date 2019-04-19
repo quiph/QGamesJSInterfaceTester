@@ -59,26 +59,16 @@ is not of a test user.
 
 ## Sending 'gameRoundStarted' and 'gameRoundEnded' events to client WebView
 
-Send game data in the following form 
-
-    ```json
-    {
-      "gameName" : String,
-      "startTime" : Long,
-      "endTime": Long
-    }
-    ``` 
-    
-by calling the following methods in the JSInterface.
+The QTalk App requires the underline game to notify when a round starts or ends. This is done by invoking the following methods: 
 
 ```jshint
-QTalkApp.setGameRoundStarted(String json)
+QTalkApp.notifyGameRoundStarted()
 ```
 
 ```jshint
-QTalkApp.setGameRoundEnded(String json)
+QTalkApp.notifyGameRoundEnded()
 ```
-
+Both the methods will show a toast as an acknowledgement.
 
 ### Download the APK: 
 

@@ -17,9 +17,17 @@
         document.getElementById("callback").innerHTML = message;
     }
 
-function myFunction() {
-  document.getElementById("demo").innerHTML = getValueFromAndroid();
-}
+    function myFunction() {
+      document.getElementById("demo").innerHTML = getValueFromAndroid();
+    }
+
+    function notifyGameRoundStarted(){
+        QTalkApp.notifyGameRoundStarted()
+    }
+
+    function notifyGameRoundEnded(){
+        QTalkApp.notifyGameRoundEnded()
+    }
 
     </script>
 </head>
@@ -31,7 +39,13 @@ function myFunction() {
 
 <p id="callback">Callback</p>
 
-<button type="button" onclick="myFunction()">Try it</button>
+<button type="button" onclick="myFunction()">Get Auth Token</button>
+<br>
+<br>
+<button type="button" onclick="notifyGameRoundStarted()">Notify Game Round Started</button>
+<br>
+<br>
+<button type="button" onclick="notifyGameRoundEnded()">Notify Game Round Ended</button>
 
 </body>
 </html>

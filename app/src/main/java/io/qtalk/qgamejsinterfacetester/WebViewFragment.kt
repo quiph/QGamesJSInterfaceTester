@@ -94,13 +94,13 @@ class WebViewFragment: Fragment() {
         }
 
         @JavascriptInterface
-        fun setGameRoundStarted(gameData: String){
-            Toast.makeText(context, "data : $gameData", Toast.LENGTH_LONG).show()
+        fun notifyGameRoundStarted(){
+            Toast.makeText(context, "Game round started notified!", Toast.LENGTH_SHORT).show()
         }
 
         @JavascriptInterface
-        fun setGameRoundEnded(gameData: String){
-            Toast.makeText(context, "data : $gameData", Toast.LENGTH_LONG).show()
+        fun notifyGameRoundEnded(){
+            Toast.makeText(context, "Game round ended notified!", Toast.LENGTH_SHORT).show()
         }
     }
 }

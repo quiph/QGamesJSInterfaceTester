@@ -10,7 +10,6 @@
 .DS_Store
 /build
 /captures
-.externalNativeBuild
 ### Android template
 # Built application files
 *.apk
@@ -47,7 +46,6 @@ proguard/
 captures/
 
 # IntelliJ
-*.iml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
@@ -78,3 +76,10 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
+libs/
+/.idea/codeStyles/
+.idea/codeStyles/
+.idea/encodings.xml
+.idea/misc.xml
+.idea/runConfigurations.xml
+.idea/vcs.xml
