@@ -72,11 +72,11 @@ Send game data in the following form
 by calling the following methods in the JSInterface.
 
 ```jshint
-QTalkApp.setGameRoundStarted(json String)
+QTalkApp.setGameRoundStarted(String json)
 ```
 
 ```jshint
-QTalkApp.setGameRoundEnded(json String)
+QTalkApp.setGameRoundEnded(String json)
 ```
 
 
