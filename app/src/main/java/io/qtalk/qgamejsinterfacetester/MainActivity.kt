@@ -53,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
             MaterialDialog(this).title(text = "Enter URL")
                 .cancelOnTouchOutside(true)
+                .negativeButton(text = "Test URL"){
+                    WebViewActivity.startActivity(this, "file:///android_asset/test.html")
+                }
                 .input { materialDialog, charSequence ->
                     if (charSequence.isNotEmpty() && Patterns.WEB_URL.matcher(charSequence).matches()){
                         materialDialog.dismiss()
@@ -65,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, "Invalid Url!", Toast.LENGTH_SHORT).show()
                     }
                 }
+                .positiveButton {  }
                 .show()
         }
 

@@ -44,9 +44,9 @@ Reponse:
 
 ## Testing steps
 
-1. To test with the underlying `test.html` file type "test-url" when prompted for a URL. [Link](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html)
+1. To test with the underlying `test.html` file, select the "test-url" option in the input dialog or type "test-url" when prompted for a URL. [Link](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html)
  to the test HTML file
-2. To test with an actual website put the link of the website as it is. The logs in `console.log` are visible in ADB logs.
+2. To test with an actual website put the link of the website as it is. The logs in `console.log` are visible in ADB logs as well as the log view in the app.
 
 ## Testing with 'test users'
 
@@ -69,6 +69,14 @@ QTalkApp.notifyGameRoundStarted()
 QTalkApp.notifyGameRoundEnded()
 ```
 Both the methods will show a toast as an acknowledgement.
+
+## Using console.log to debug in the WebView
+
+The app has a log view enabled which can be expanded or collapsed and will show all the messages printed via 
+```jshint
+console.log("message")
+```
+
 
 ### Download the APK: 
 

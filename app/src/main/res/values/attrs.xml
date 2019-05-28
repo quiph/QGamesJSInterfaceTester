@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ExpandableLinearLayout">
+        <attr name="headerText" format="string"/>
+        <attr name="headerTextStyle" format="reference"/>
+        <attr name="subtitleText" format="string"/>
+        <attr name="subtitleTextStyle" format="reference"/>
+        <attr name="iconLabelText" format="string"/>
+        <attr name="iconLabelTextStyle" format="reference"/>
+        <attr name="iconSize" format="dimension"/>
+        <attr name="headerBackground" format="reference"/>
+        <attr name="autoGenerateSubtitleText" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="ExpandableLinearLayout_Layout">
+        <attr name="isForcedInvisible" format="boolean"/>
+    </declare-styleable>
+</resources>

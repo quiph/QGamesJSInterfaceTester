@@ -4,12 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.JavascriptInterface
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
@@ -52,12 +51,25 @@ class WebViewFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         webView.addJavascriptInterface(JSInterface(activity!!), JS_INTERFACE_OBJECT_NAME)
         loadWebView((arguments?.getString(ARG_URL_STRING).formatUrl()))
+        clearLog.setOnClickListener {
+            logText.text = ""
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadWebView(url: String) {
         webView.webViewClient = InAppBrowser()
 
+        webView.webChromeClient = object : WebChromeClient(){
+            override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+                Log.d("WebViewFragment", "onConsoleMessage() called with: consoleMessage = [$consoleMessage]")
+                consoleMessage?.apply {
+                    logText.append("${message()} ------ ${sourceId()}:${lineNumber()}\n")
+                    logsScrollView.fullScroll(View.FOCUS_DOWN)
+                }
+                return super.onConsoleMessage(consoleMessage)
+            }
+        }
         webView.settings.javaScriptEnabled = true
         webView.settings.loadsImagesAutomatically = true
         webView.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
