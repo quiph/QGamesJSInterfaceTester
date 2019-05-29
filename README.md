@@ -12,8 +12,8 @@ This bridge, called as JS interface can be used both to get values from android 
 
 On the JS side, to get the user auth token from the device running the web app in WebView, use the following code: 
 
-```jshint
-var token = QTalkApp.getUserAuthToken()
+```javascript
+var token = QTalkApp.getUserAuthToken();
 ```
 
 ## Validating the token
@@ -28,7 +28,7 @@ Headers: x-auth-id-token: `token` (this token value is the one fetched initially
 
 Reponse:
     If validated: 200
-    ```json
+    ```javascript
     {
       "isTokenValid" : Boolean,
       "userId" : String (nullable),
@@ -41,6 +41,16 @@ Reponse:
         Respone code: 401 (Unauthorized)
 
 **Note:** The base url mentioned here is for the staging server, for the url for the production server please submit your web app for review [here](https://forms.gle/mir2dCUmAD1x44KW8)
+
+### Debugging `verifyAuthIdToken` api
+
+The value passed in `x-auth-id-token` is a JWT, JWTs expire every 15mins or so, thus having an updated token everytime is problem. To solve this while debugging with 
+the api, append a url param as `isDebug=true` and send the converted `uid` from the token (which you can save somewhere locally). 
+
+Remember, this will **skip** authentication and will just consume the auth id as it is and **will not** work in production environments.
+
+[Link](https://jwt.io/introduction/) for reading more about JWTs and how they work.
+[Link](https://jwt.io/) for getting a `uid` from the JWT. 
 
 ## Testing steps
 
@@ -61,11 +71,11 @@ is not of a test user.
 
 The QTalk App requires the underline game to notify when a round starts or ends. This is done by invoking the following methods: 
 
-```jshint
+```javascript
 QTalkApp.notifyGameRoundStarted()
 ```
 
-```jshint
+```javascript
 QTalkApp.notifyGameRoundEnded()
 ```
 Both the methods will show a toast as an acknowledgement.
@@ -73,7 +83,7 @@ Both the methods will show a toast as an acknowledgement.
 ## Using console.log to debug in the WebView
 
 The app has a log view enabled which can be expanded or collapsed and will show all the messages printed via 
-```jshint
+```javascript
 console.log("message")
 ```
 
