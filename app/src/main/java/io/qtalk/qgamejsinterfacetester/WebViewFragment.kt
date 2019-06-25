@@ -43,14 +43,16 @@ class WebViewFragment: Fragment() {
             }
         }
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.webview_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        webView.addJavascriptInterface(JSInterface(activity!!), JS_INTERFACE_OBJECT_NAME)
+        webView.addJavascriptInterface(JSInterface(activity!!, webView), JS_INTERFACE_OBJECT_NAME)
         loadWebView((arguments?.getString(ARG_URL_STRING).formatUrl()))
+
         clearLog.setOnClickListener {
             logText.text = ""
         }
@@ -98,7 +100,7 @@ class WebViewFragment: Fragment() {
     }
 
     @Suppress("unused")
-    private class JSInterface(private val context: Context) {
+    private class JSInterface(private val context: Context, private val webView: WebView) {
 
         @JavascriptInterface
         fun getUserAuthToken(): String {
@@ -113,6 +115,31 @@ class WebViewFragment: Fragment() {
         @JavascriptInterface
         fun notifyGameRoundEnded(){
             Toast.makeText(context, "Game round ended notified!", Toast.LENGTH_SHORT).show()
+        }
+
+        @JavascriptInterface
+        fun updateGamePrompts(prompts: String){
+            webView.handler.post {
+                webView.evaluateJavascript("setPromptToText($prompts)") { value -> Log.d("JSInterface", "onReceiveValue: $value") }
+            }
+        }
+
+        @JavascriptInterface
+        fun clearGamePrompts() {
+         webView.handler.post {
+             webView.evaluateJavascript("setPromptToText(\"\")"
+             ) { value -> Log.d("JSInterface", "onReceiveValue: $value") }
+         }
+        }
+
+        // test only
+        @JavascriptInterface
+        fun clearWebViewCache(){
+            Log.d("JSInterface", "clearWebViewCache: ")
+            webView.handler.post {
+                Toast.makeText(context, "Cache cleared!", Toast.LENGTH_LONG).show()
+                webView.clearCache(true)
+            }
         }
     }
 }

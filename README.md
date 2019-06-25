@@ -52,6 +52,29 @@ Remember, this will **skip** authentication and will just consume the auth id as
 [Link](https://jwt.io/introduction/) for reading more about JWTs and how they work.
 [Link](https://jwt.io/) for getting a `uid` from the JWT. 
 
+## Sending 'gameRoundStarted' and 'gameRoundEnded' events to client WebView
+
+The QTalk App requires the underline game to notify when a round starts or ends. This is done by invoking the following methods: 
+
+```javascript
+QTalkApp.notifyGameRoundStarted()
+```
+
+```javascript
+QTalkApp.notifyGameRoundEnded()
+```
+Both the methods will show a toast as an acknowledgement.
+
+## Game Prompts:
+Game prompts are dynamic components sent by the game developer based on states, consider this example:
+
+Example: If a game having two players A & B has a state where the developer can identify that the player A is losing, a winning prompt can be generated and sent to the device on the
+B player's end. This prompt will then be shown as a message by the underlying QTalk Application.
+
+#### Clearing game prompts:
+If the game ever reaches a state where an older game prompt needs to cleared call the interface method for clearing the game prompts as following:
+`QTalkApp.clearGamePrompts()`
+
 ## Testing steps
 
 1. To test with the underlying `test.html` file, select the "test-url" option in the input dialog or type "test-url" when prompted for a URL. [Link](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html)
@@ -67,25 +90,17 @@ Remember, this will **skip** authentication and will just consume the auth id as
 4. Note that this will **only** work with the **Staging** server and will return an HTTP **UNAUTHORIZED** if used with the production server and will fail if the token used
 is not of a test user. 
 
-## Sending 'gameRoundStarted' and 'gameRoundEnded' events to client WebView
+## Test only features
 
-The QTalk App requires the underline game to notify when a round starts or ends. This is done by invoking the following methods: 
+There are some components which are available only during testing, the main QTalk App won't have these: 
 
-```javascript
-QTalkApp.notifyGameRoundStarted()
-```
-
-```javascript
-QTalkApp.notifyGameRoundEnded()
-```
-Both the methods will show a toast as an acknowledgement.
-
-## Using console.log to debug in the WebView
-
+1. **Using console.log to debug in the WebView:**
 The app has a log view enabled which can be expanded or collapsed and will show all the messages printed via 
 ```javascript
 console.log("message")
 ```
+
+2. **Clearing the WebView cache**: This clears the underlying WebViews cache as well as disk cache if any found.
 
 
 ### Download the APK: 

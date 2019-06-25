@@ -1,7 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <script>
+
+    var promptsToSend = ["Prompt1", "Prompt2", "Prompt3", "Prompt4"]
+
+    function getAuthToken() {
+      document.getElementById("textView").innerHTML = getValueFromAndroid();
+    }
 
     function getValueFromAndroid(){
         var x = new Date();
@@ -13,45 +19,51 @@
         return token;
     }
 
-    function onReceive(message){
-        document.getElementById("callback").innerHTML = message;
+    function setPromptToText(prompts){
+         document.getElementById("textView").innerHTML = prompts
     }
 
-    function myFunction() {
-      document.getElementById("demo").innerHTML = getValueFromAndroid();
+    function updateGamePrompts() {
+        QTalkApp.updateGamePrompts(JSON.stringify(promptsToSend))
     }
 
-    function notifyGameRoundStarted(){
-        QTalkApp.notifyGameRoundStarted()
+    function logTestingFunction(){
+        console.log("This is a test log")
     }
-
-    function notifyGameRoundEnded(){
-        QTalkApp.notifyGameRoundEnded()
-    }
-
-function logTestingFunction(){
-    console.log("This is a test log")
-}
 
     </script>
 </head>
 <body>
 
-<h2>JavaScript in Head</h2>
+<h2>QJSInterface Testing HTML</h2>
 
-<p id="demo">A Paragraph.</p>
+<p id="textView"></p>
 
-<p id="callback">Callback</p>
+<button type="button" onclick="getAuthToken()">Get Auth Token</button>
+<br>
+<br>
+<button type="button" onclick="QTalkApp.notifyGameRoundStarted()">Notify Game Round Started</button>
+<br>
+<br>
+<button type="button" onclick="updateGamePrompts()">Update Game Prompts</button>
+<br>
+<br>
+<button type="button" onclick="QTalkApp.clearGamePrompts()">Clear Game Prompts</button>
+<br>
+<br>
+<button type="button" onclick="QTalkApp.notifyGameRoundEnded()">Notify Game Round Ended</button>
 
-<button type="button" onclick="myFunction()">Get Auth Token</button>
 <br>
 <br>
-<button type="button" onclick="notifyGameRoundStarted()">Notify Game Round Started</button>
+<hr>
+<p>Testing/ Utility only functions</p>
+<hr>
 <br>
-<br>
-<button type="button" onclick="notifyGameRoundEnded()">Notify Game Round Ended</button>
-<br>
-<br>
+
 <button type="button" onclick="logTestingFunction()">Console.log</button>
+<br>
+<br>
+<button type="button" onclick="QTalkApp.clearWebViewCache()">Clear WebView Cache</button>
+
 </body>
 </html>
