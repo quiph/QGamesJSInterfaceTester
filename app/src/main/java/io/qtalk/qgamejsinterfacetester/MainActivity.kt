@@ -51,16 +51,20 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            MaterialDialog(this).title(text = "Enter URL")
+            MaterialDialog(this)
+                .title(text = "Enter URL")
                 .cancelOnTouchOutside(true)
                 .negativeButton(text = "Test URL"){
                     WebViewActivity.startActivity(this, "file:///android_asset/test.html")
                 }
                 .input { materialDialog, charSequence ->
-                    if (charSequence.isNotEmpty() && Patterns.WEB_URL.matcher(charSequence).matches()){
+                    val urlToOpen = charSequence.toString()
+                       // "qhangman.herokuapp.com/QHangman/?id=12234&isTestUser=true"
+
+                    if (urlToOpen.isNotEmpty() && Patterns.WEB_URL.matcher(urlToOpen).matches()){
                         materialDialog.dismiss()
-                        WebViewActivity.startActivity(this, charSequence.toString())
-                    }else if (charSequence.toString() == "test-url"){
+                        WebViewActivity.startActivity(this, urlToOpen)
+                    }else if (urlToOpen == "test-url"){
                         materialDialog.dismiss()
                         WebViewActivity.startActivity(this, "file:///android_asset/test.html")
                     }

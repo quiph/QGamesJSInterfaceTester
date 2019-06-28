@@ -21,7 +21,7 @@ fun String?.formatUrl(): String {
     if (startsWith("file://")) return this
 
     return if (!startsWith("https://") && !startsWith("http://")) {
-        "http://$this"
+        "https://$this"
     } else {
         this
     }
@@ -35,6 +35,9 @@ class WebViewFragment: Fragment() {
         private const val TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
         private const val ARG_URL_STRING = "arg-url"
+
+        private var isTestUrl = false
+
         fun init(url: String): WebViewFragment {
             return WebViewFragment().apply {
                 arguments = Bundle(1).also {
@@ -60,11 +63,13 @@ class WebViewFragment: Fragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadWebView(url: String) {
+
+        isTestUrl = url.startsWith("file:///")
+
         webView.webViewClient = InAppBrowser()
 
         webView.webChromeClient = object : WebChromeClient(){
             override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
-                Log.d("WebViewFragment", "onConsoleMessage() called with: consoleMessage = [$consoleMessage]")
                 consoleMessage?.apply {
                     logText.append("${message()} ------ ${sourceId()}:${lineNumber()}\n")
                     logsScrollView.fullScroll(View.FOCUS_DOWN)
@@ -119,17 +124,24 @@ class WebViewFragment: Fragment() {
 
         @JavascriptInterface
         fun updateGamePrompts(prompts: String){
-            webView.handler.post {
-                webView.evaluateJavascript("setPromptToText($prompts)") { value -> Log.d("JSInterface", "onReceiveValue: $value") }
+            if (isTestUrl) {
+                webView.handler.post {
+                    webView.evaluateJavascript("setPromptToText($prompts)") { Log.d("JSInterface", "onReceiveValue") }
+                }
+            }else {
+                Toast.makeText(context, "Prompts recieved: $prompts", Toast.LENGTH_LONG).show()
             }
         }
 
         @JavascriptInterface
         fun clearGamePrompts() {
-         webView.handler.post {
-             webView.evaluateJavascript("setPromptToText(\"\")"
-             ) { value -> Log.d("JSInterface", "onReceiveValue: $value") }
-         }
+            if (isTestUrl) {
+                webView.handler.post {
+                    webView.evaluateJavascript("setPromptToText(\"\")") { Log.d("JSInterface", "onReceiveValue") }
+                }
+            }else {
+                Toast.makeText(context, "Prompts cleared", Toast.LENGTH_LONG).show()
+            }
         }
 
         // test only

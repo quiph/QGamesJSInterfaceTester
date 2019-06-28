@@ -69,8 +69,12 @@ Both the methods will show a toast as an acknowledgement.
 Game prompts are dynamic components sent by the game developer based on states, consider this example:
 
 Example: If a game having two players A & B has a state where the developer can identify that the player A is losing, a winning prompt can be generated and sent to the device on the
-B player's end. This prompt will then be shown as a message by the underlying QTalk Application.
-
+B player's end. This prompt will then be shown as a message by the underlying QTalk Application, to show these prompts, call:
+```javascript
+QTalkApp.updateGamePrompts(JSON.stringify(promptsToSend))
+```
+Here `promptsToSend` is an array of strings to be sent to the QTalk application
+ 
 #### Clearing game prompts:
 If the game ever reaches a state where an older game prompt needs to cleared call the interface method for clearing the game prompts as following:
 `QTalkApp.clearGamePrompts()`
