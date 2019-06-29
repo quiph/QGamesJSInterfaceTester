@@ -1,3 +1,11 @@
+# From v1.5:
+
+## Bug Fixes
+* Fixed clear text url usage for devices running Android 9 and above.
+
+### Optimizations
+* Making localhost IP have `http` by default instead of `https`
+
 # From v1.4:
 
 # Major Changes
