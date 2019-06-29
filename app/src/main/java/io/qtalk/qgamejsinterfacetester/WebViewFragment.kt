@@ -21,7 +21,12 @@ fun String?.formatUrl(): String {
     if (startsWith("file://")) return this
 
     return if (!startsWith("https://") && !startsWith("http://")) {
-        "https://$this"
+        if (startsWith("192.168")) {
+            // is local host, do not prefix with https
+            "http://$this"
+        } else {
+            "https://$this"
+        }
     } else {
         this
     }
