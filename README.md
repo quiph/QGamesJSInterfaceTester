@@ -20,15 +20,16 @@ var token = QTalkApp.getUserAuthToken();
 
 To validate the token, use the following endpoint for staging: 
 
-API Endpoint: https://staging.remote.qtalk.io/v1/verifyAuthIdToken
+API Endpoint: https://staging.remote.qtalk.io/utilities/v1/verifyAuthIdToken
 
-Method: GET
+Method: **GET**
 
 Headers: x-auth-id-token: `token` (this token value is the one fetched initially)
 
 Reponse:
     If validated: 200
-    ```javascript
+    
+```javascript
     {
       "isTokenValid" : Boolean,
       "userId" : String (nullable),
@@ -36,9 +37,9 @@ Reponse:
          "displayName": String (nullable)
        }
     }
-    ``` 
-    Else: 
-        Respone code: 401 (Unauthorized)
+```
+   Else: 
+     Respone code: 401 (Unauthorized)
 
 **Note:** The base url mentioned here is for the staging server, for the url for the production server please submit your web app for review [here](https://forms.gle/mir2dCUmAD1x44KW8)
 
@@ -47,7 +48,7 @@ Reponse:
 The value passed in `x-auth-id-token` is a JWT, JWTs expire every 15mins or so, thus having an updated token everytime is problem. To solve this while debugging with 
 the api, append a url param as `isDebug=true` and send the converted `uid` from the token (which you can save somewhere locally). 
 
-Remember, this will **skip** authentication and will just consume the auth id as it is and **will not** work in production environments.
+Remember, this will *skip* authentication and will just consume the auth id as it is and **will not** work in production environments.
 
 [Link](https://jwt.io/introduction/) for reading more about JWTs and how they work.
 [Link](https://jwt.io/) for getting a `uid` from the JWT. 
@@ -89,7 +90,7 @@ If the game ever reaches a state where an older game prompt needs to cleared cal
 
 1. The QTalk backend has provision for 3 'test users', their tokens are present in the application. 
 2. Use the value of these tokens to hit the staging server with the request URL mentioned above, just append the url param with `isTestUser=true`, final url should look something like this, 
-"https://staging.remote.qtalk.io/v1/verifyAuthIdToken?isTestUser=true"
+"https://staging.remote.qtalk.io/utilities/v1/verifyAuthIdToken?isTestUser=true"
 3. This will evaluate the current token as a test user and will return the the corresponding user details as well. (QTalk Test 1, QTalk Test 2 etc..)
 4. Note that this will **only** work with the **Staging** server and will return an HTTP **UNAUTHORIZED** if used with the production server and will fail if the token used
 is not of a test user. 
