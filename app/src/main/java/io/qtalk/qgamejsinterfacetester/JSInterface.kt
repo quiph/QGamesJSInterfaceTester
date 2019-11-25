@@ -5,14 +5,13 @@ import android.webkit.JavascriptInterface
 @Suppress("unused")
 class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
 
-
     fun setJSInterfaceBridge(jsInterfaceBridge: JSInterfaceBridge?){
         this.jsInterfaceBridge = jsInterfaceBridge
     }
 
     @JavascriptInterface
     fun getUserAuthToken(): String {
-        return jsInterfaceBridge?.getUserAuthToken()?:""
+        return jsInterfaceBridge?.getUserAuthToken()!!
     }
 
     @JavascriptInterface
@@ -35,7 +34,7 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
         jsInterfaceBridge?.clearGamePrompts()
     }
 
-    @Deprecated("No supported any more", replaceWith = ReplaceWith("saveBase64Image(base64EncodedImageString)"))
+    @Deprecated("Not supported any more", replaceWith = ReplaceWith("saveBase64Image(base64EncodedImageString)"))
     @JavascriptInterface
     fun onBase64ImageSaved(base64EncodedImageString: String){
         saveBase64Image(base64EncodedImageString)
