@@ -1,21 +1,18 @@
 package io.qtalk.qgamejsinterfacetester
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.ConsoleMessage
-import android.webkit.JavascriptInterface
-import android.webkit.WebView
 import android.widget.Toast
 import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
 import io.qtalk.qgamejsinterfacetester.helpers.generateSHA1
 import io.qtalk.qgamejsinterfacetester.views.PermissionAwareWebViewFragment
 import kotlinx.android.synthetic.main.webview_fragment.*
 
-class WebViewFragment: PermissionAwareWebViewFragment() {
+class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterfaceBridge {
 
     companion object {
         private const val JS_INTERFACE_OBJECT_NAME = "QTalkApp"
@@ -35,6 +32,8 @@ class WebViewFragment: PermissionAwareWebViewFragment() {
         }
     }
 
+    private lateinit var jsInterface: JSInterface
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.webview_fragment, container, false)
     }
@@ -44,7 +43,9 @@ class WebViewFragment: PermissionAwareWebViewFragment() {
 
         isTestUrl = getLoadedUrl()!!.startsWith("file:///")
 
-        webView.addJavascriptInterface(JSInterface(activity!!, webView), JS_INTERFACE_OBJECT_NAME)
+        jsInterface = JSInterface(this)
+
+        webView.addJavascriptInterface(jsInterface, JS_INTERFACE_OBJECT_NAME)
 
         clearLog.setOnClickListener {
             logText.text = ""
@@ -57,59 +58,60 @@ class WebViewFragment: PermissionAwareWebViewFragment() {
             logText.append("${message()} ------ ${sourceId()}:${lineNumber()}\n")
             logsScrollView.fullScroll(View.FOCUS_DOWN)
         }
-
     }
 
-    @Suppress("unused")
-    private class JSInterface(private val context: Context, private val webView: WebView) {
+    override fun onDestroyView() {
+        jsInterface.setJSInterfaceBridge(null)
+        super.onDestroyView()
+    }
 
-        @JavascriptInterface
-        fun getUserAuthToken(): String {
-            return PreferenceManager.getString(context, PreferenceManager.KEY_SELECTED_USER)?.generateSHA1() ?: TEST_TOKEN
-        }
 
-        @JavascriptInterface
-        fun notifyGameRoundStarted(){
-            Toast.makeText(context, "Game round started notified!", Toast.LENGTH_SHORT).show()
-        }
+    /**
+     * JSInterface bridge methods
+     * */
 
-        @JavascriptInterface
-        fun notifyGameRoundEnded(){
-            Toast.makeText(context, "Game round ended notified!", Toast.LENGTH_SHORT).show()
-        }
+    override fun getUserAuthToken(): String {
+        return PreferenceManager.getString(activity!!, PreferenceManager.KEY_SELECTED_USER)?.generateSHA1() ?: TEST_TOKEN
+    }
 
-        @JavascriptInterface
-        fun updateGamePrompts(prompts: String){
-            if (isTestUrl) {
-                webView.handler.post {
-                    webView.evaluateJavascript("setPromptToText($prompts)") { Log.d("JSInterface", "onReceiveValue") }
-                }
-            }else {
-                Toast.makeText(context, "Prompts recieved: $prompts", Toast.LENGTH_LONG).show()
-            }
-        }
+    override fun notifyGameRoundStarted(){
+        Toast.makeText(context, "Game round started notified!", Toast.LENGTH_SHORT).show()
+    }
 
-        @JavascriptInterface
-        fun clearGamePrompts() {
-            if (isTestUrl) {
-                webView.handler.post {
-                    webView.evaluateJavascript("setPromptToText(\"\")") { Log.d("JSInterface", "onReceiveValue") }
-                }
-            }else {
-                Toast.makeText(context, "Prompts cleared", Toast.LENGTH_LONG).show()
-            }
-        }
+    override fun notifyGameRoundEnded(){
+        Toast.makeText(context, "Game round ended notified!", Toast.LENGTH_SHORT).show()
+    }
 
-        // todo add saveBase64 method
-
-            // test only
-        @JavascriptInterface
-        fun clearWebViewCache(){
-            Log.d("JSInterface", "clearWebViewCache: ")
+    override fun updateGamePrompts(prompts: String){
+        if (isTestUrl) {
             webView.handler.post {
-                Toast.makeText(context, "Cache cleared!", Toast.LENGTH_LONG).show()
-                webView.clearCache(true)
+                webView.evaluateJavascript("setPromptToText($prompts)") { Log.d("JSInterface", "onReceiveValue") }
             }
+        }else {
+            Toast.makeText(context, "Prompts recieved: $prompts", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun clearGamePrompts() {
+        if (isTestUrl) {
+            webView.handler.post {
+                webView.evaluateJavascript("setPromptToText(\"\")") { Log.d("JSInterface", "onReceiveValue") }
+            }
+        }else {
+            Toast.makeText(context, "Prompts cleared", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun saveBase64Image(base64EncodedImageString: String) {
+        Log.d("JSInterfaceBridge", "onBase64ImageSaved() called $base64EncodedImageString")
+    }
+
+    // test only
+    override fun clearWebViewCache(){
+        Log.d("JSInterfaceBridge", "clearWebViewCache: ")
+        webView.handler.post {
+            Toast.makeText(context, "Cache cleared!", Toast.LENGTH_LONG).show()
+            webView.clearCache(true)
         }
     }
 }
