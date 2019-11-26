@@ -14,34 +14,6 @@ import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
 import io.qtalk.qgamejsinterfacetester.helpers.QTalkTestUsers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import java.nio.charset.Charset
-import java.security.MessageDigest
-
-fun ByteArray.toHexString(): String {
-    val hexString = StringBuilder()
-
-    for (i in indices) {
-        val hex = Integer.toHexString(0xFF and this[i].toInt())
-        if (hex.length == 1) {
-            hexString.append('0')
-        }
-        hexString.append(hex)
-    }
-
-    return hexString.toString()
-}
-
-fun String.generateSHA1(): String{
-    return MessageDigest.getInstance("SHA-1")
-        .digest(this.toByteArray(Charset.forName("UTF-8")))
-        .toHexString()
-}
-
-fun String.generateMD5(): String{
-    return MessageDigest.getInstance("MD5")
-        .digest(this.toByteArray(Charset.forName("UTF-8")))
-        .toHexString()
-}
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,18 +27,18 @@ class MainActivity : AppCompatActivity() {
                 .title(text = "Enter URL")
                 .cancelOnTouchOutside(true)
                 .negativeButton(text = "Test URL"){
-                    WebViewActivity.startActivity(this, "file:///android_asset/test.html")
+                    openTestUrl()
                 }
                 .input { materialDialog, charSequence ->
                     val urlToOpen = charSequence.toString()
-                       // "qhangman.herokuapp.com/QHangman/?id=12234&isTestUser=true"
+                    // "qhangman.herokuapp.com/QHangman/?id=12234&isTestUser=true"
 
                     if (urlToOpen.isNotEmpty() && Patterns.WEB_URL.matcher(urlToOpen).matches()){
                         materialDialog.dismiss()
                         WebViewActivity.startActivity(this, urlToOpen)
                     }else if (urlToOpen == "test-url"){
                         materialDialog.dismiss()
-                        WebViewActivity.startActivity(this, "file:///android_asset/test.html")
+                        openTestUrl()
                     }
                     else{
                         Toast.makeText(this, "Invalid Url!", Toast.LENGTH_SHORT).show()
@@ -90,6 +62,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
         }
+    }
+
+    private fun openTestUrl(){
+//        val testUrl = "bouncyballs.org"
+        val testUrl = "file:///android_asset/test.html"
+        WebViewActivity.startActivity(this, testUrl)
     }
 
     @SuppressLint("SetTextI18n")
