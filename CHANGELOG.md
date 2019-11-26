@@ -1,3 +1,14 @@
+# From v1.6:
+
+# Major Changes
+* Adding permission aware capabilities for Camera and microphone permissions at webkit level
+* Bumped `minSdk` version to 21
+* Abstracted out JSInterface.kt and added bridge interface to communicate with consuming component.
+
+#### Updated Dependencies
+* Updating dependencies
+* Updating kotlin version to 1.3.60
+
 # From v1.5:
 
 ## Bug Fixes
