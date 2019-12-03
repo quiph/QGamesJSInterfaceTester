@@ -80,6 +80,12 @@ Here `promptsToSend` is an array of strings to be sent to the QTalk application
 If the game ever reaches a state where an older game prompt needs to cleared call the interface method for clearing the game prompts as following:
 `QTalkApp.clearGamePrompts()`
 
+## Top level Id support: 
+Every game URL should have a top level game-id. This id will be the call id in case the game is called from QTalk and will be appended by the application. For testing and debugging purposes, this id should be appended into the final game url as a param to avoid unforseen scenarios.
+The param key to this id is: `id`. Thus making the url have the following format: `https://<game-url>/?id=<game_id>`.
+
+The uniqueness of this id is guaranteed when called from the QTalk application and can be used by the game developer as a unique key to store game level information. 
+
 ## Testing steps
 
 1. To test with the underlying `test.html` file, select the "test-url" option in the input dialog or type "test-url" when prompted for a URL. [Link](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html)
