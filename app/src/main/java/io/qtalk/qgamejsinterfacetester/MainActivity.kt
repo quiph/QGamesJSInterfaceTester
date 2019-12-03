@@ -51,7 +51,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun getUrlFromPrefOrIntent(): String? {
         return if (intent.action == Intent.ACTION_VIEW) {
-            intent.data?.toString()
+            intent.data?.toString().also {
+                intent.data = null
+                intent.action = Intent.ACTION_MAIN
+            }
         } else {
             PreferenceManager.getString(this, PreferenceManager.KEY_LAST_ENTERED_URL)
         }
