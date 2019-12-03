@@ -1,4 +1,4 @@
-package io.qtalk.qgamejsinterfacetester
+package io.qtalk.qgamejsinterfacetester.core
 
 import android.webkit.JavascriptInterface
 
@@ -45,6 +45,11 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
         jsInterfaceBridge?.saveBase64Image(base64EncodedImageString)
     }
 
+    @JavascriptInterface
+    fun getInteractionType(): String {
+        return jsInterfaceBridge?.getInteractionType() ?: ""
+    }
+
     // test only
     @JavascriptInterface
     fun clearWebViewCache(){
@@ -65,6 +70,9 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
 
         fun saveBase64Image(base64EncodedImageString: String)
 
+        fun getInteractionType(): String
+
+        // test only
         fun clearWebViewCache()
     }
 }

@@ -8,6 +8,8 @@ object PreferenceManager {
 
     const val KEY_SELECTED_USER = "selected_user"
 
+    const val KEY_LAST_ENTERED_URL = "last_entered_url"
+
     fun getString(context: Context, key: String): String? {
         return getSharedPreferences(context).getString(key, null)
     }

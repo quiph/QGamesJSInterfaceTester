@@ -8,8 +8,11 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
+import com.afollestad.materialdialogs.checkbox.isCheckPromptChecked
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
+import io.qtalk.qgamejsinterfacetester.core.InteractionType
 import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
 import io.qtalk.qgamejsinterfacetester.helpers.QTalkTestUsers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,13 +32,12 @@ class MainActivity : AppCompatActivity() {
                 .negativeButton(text = "Test URL"){
                     openTestUrl()
                 }
-                .input { materialDialog, charSequence ->
+                .checkBoxPrompt(text = "Make a preview call", onToggle = null)
+                .input(prefill = PreferenceManager.getString(this, PreferenceManager.KEY_LAST_ENTERED_URL)) { materialDialog, charSequence ->
                     val urlToOpen = charSequence.toString()
-                    // "qhangman.herokuapp.com/QHangman/?id=12234&isTestUser=true"
-
                     if (urlToOpen.isNotEmpty() && Patterns.WEB_URL.matcher(urlToOpen).matches()){
                         materialDialog.dismiss()
-                        WebViewActivity.startActivity(this, urlToOpen)
+                        WebViewActivity.startActivity(this, urlToOpen, if (materialDialog.isCheckPromptChecked()) InteractionType.WEB_SHARING else InteractionType.IN_CALL)
                     }else if (urlToOpen == "test-url"){
                         materialDialog.dismiss()
                         openTestUrl()
@@ -65,7 +67,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openTestUrl(){
-//        val testUrl = "bouncyballs.org"
         val testUrl = "file:///android_asset/test.html"
         WebViewActivity.startActivity(this, testUrl)
     }

@@ -1,5 +1,6 @@
 package io.qtalk.qgamejsinterfacetester
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ConsoleMessage
 import android.widget.Toast
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.IgnoreExtraProperties
+import com.google.firebase.database.PropertyName
+import io.qtalk.qgamejsinterfacetester.core.InteractionType
+import io.qtalk.qgamejsinterfacetester.core.JSInterface
 import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
 import io.qtalk.qgamejsinterfacetester.helpers.generateSHA1
 import io.qtalk.qgamejsinterfacetester.views.PermissionAwareWebViewFragment
@@ -20,19 +26,71 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         private const val TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
         private const val ARG_URL_STRING = "arg-url"
+        private const val ARG_INTERACTION_TYPE = "arg-interaction-type"
 
         private var isTestUrl = false
 
-        fun init(url: String): WebViewFragment {
+        private lateinit var interactionType: InteractionType
+
+        fun init(url: String, interactionType: InteractionType = InteractionType.IN_CALL): WebViewFragment {
             return WebViewFragment().apply {
                 arguments = Bundle(1).also {
                     it.putString(ARG_URL_STRING, url)
+                    it.putString(ARG_INTERACTION_TYPE, interactionType.name)
                 }
             }
         }
     }
 
     private lateinit var jsInterface: JSInterface
+
+    private data class TestUserObject(
+        val tstId: String,
+        val iPrv: Boolean = true,
+        val mod: String = "VOIP"
+    )
+
+    @IgnoreExtraProperties
+    data class RTDBPreviewCallDetails(
+        @get:PropertyName("rtcClId")
+        @set:PropertyName("rtcClId")
+        var rtcCallId: String,
+        @get:PropertyName("diAt")
+        @set:PropertyName("diAt")
+        var dialedAt: Long
+    )
+
+    private fun writeParticipantInfoAndCallDetailsToRTDB(){
+
+        val selectedUser = getSelectedUserFromPref()?: run {
+            Toast.makeText(activity!!, "No user selected!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val loadedUrl = getLoadedUrl()!!
+
+        val callId = Uri.parse(loadedUrl).getQueryParameter("id")?: run {
+            Toast.makeText(activity!!, "No Call ID provided, check entered URL!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        Log.d("WebViewFragment", "writeParticipantInfoAndCallDetailsToRTDB: ${callId}, $selectedUser")
+
+        val database = FirebaseDatabase.getInstance()
+
+        // get reference to clDts/prtcpnts which is where the participants are store in by the main QTalk app.
+        val ref = database.getReference("qtalkDebugAndStaging/calls").child(callId)
+
+        // store the participant info with the key as the user id
+        ref.child("prtcpnts").child(selectedUser).setValue(TestUserObject(selectedUser))
+
+        // store call details
+        ref.child("clDts").setValue(RTDBPreviewCallDetails(
+            callId,
+            System.currentTimeMillis()
+        ))
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.webview_fragment, container, false)
@@ -41,7 +99,22 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        isTestUrl = getLoadedUrl()!!.startsWith("file:///")
+        val loadedUrl = getLoadedUrl()!!
+
+        isTestUrl = loadedUrl.startsWith("file:///")
+
+        if (!isTestUrl) {
+            PreferenceManager.writeString(activity!!, PreferenceManager.KEY_LAST_ENTERED_URL, loadedUrl)
+        }
+
+        interactionType = InteractionType.valueOf((arguments?: return).getString(ARG_INTERACTION_TYPE, InteractionType.IN_CALL.name))
+
+        Log.d("WebViewFragment", "onViewCreated: interaction type: $interactionType")
+
+        if (interactionType == InteractionType.WEB_SHARING) {
+            // write to QTalks RTDB here as participant information needs to be added in the array.
+            writeParticipantInfoAndCallDetailsToRTDB()
+        }
 
         jsInterface = JSInterface(this)
 
@@ -66,13 +139,15 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
     }
 
 
-    /**
-     * JSInterface bridge methods
-     * */
+    override fun getInteractionType(): String {
+        return interactionType.name
+    }
 
     override fun getUserAuthToken(): String {
-        return PreferenceManager.getString(activity!!, PreferenceManager.KEY_SELECTED_USER)?.generateSHA1() ?: TEST_TOKEN
+        return getSelectedUserFromPref()?.generateSHA1() ?: TEST_TOKEN
     }
+
+    private fun getSelectedUserFromPref() = PreferenceManager.getString(activity!!, PreferenceManager.KEY_SELECTED_USER)
 
     override fun notifyGameRoundStarted(){
         Toast.makeText(context, "Game round started notified!", Toast.LENGTH_SHORT).show()
