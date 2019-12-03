@@ -1,3 +1,19 @@
+# From v1.7:
+
+# Major Changes
+* Adding Interaction types
+* Adding option to make a preview call, writing to QTalk debug rtdb with participant info.
+* Integrating firebase sdk.
+
+## New Features
+* Adding Interaction types
+* Adding feature to save last entered url and use it as the input in the next open
+* Adding option to make a preview call, writing to QTalk debug rtdb with participant info.
+* Adding deeplink to open the dialog, listening to http and https links
+
+## Bug Fixes
+* Fixing intent problems when opening from deeplink.
+
 # From v1.6:
 
 # Major Changes
