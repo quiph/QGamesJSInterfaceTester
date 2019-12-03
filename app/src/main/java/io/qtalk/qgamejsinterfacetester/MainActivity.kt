@@ -1,7 +1,9 @@
 package io.qtalk.qgamejsinterfacetester
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.Menu
 import android.view.MenuItem
@@ -25,29 +27,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        consumeIntent()
+
         fab.setOnClickListener {
-            MaterialDialog(this)
-                .title(text = "Enter URL")
-                .cancelOnTouchOutside(true)
-                .negativeButton(text = "Test URL"){
-                    openTestUrl()
-                }
-                .checkBoxPrompt(text = "Make a preview call", onToggle = null)
-                .input(prefill = PreferenceManager.getString(this, PreferenceManager.KEY_LAST_ENTERED_URL)) { materialDialog, charSequence ->
-                    val urlToOpen = charSequence.toString()
-                    if (urlToOpen.isNotEmpty() && Patterns.WEB_URL.matcher(urlToOpen).matches()){
-                        materialDialog.dismiss()
-                        WebViewActivity.startActivity(this, urlToOpen, if (materialDialog.isCheckPromptChecked()) InteractionType.WEB_SHARING else InteractionType.IN_CALL)
-                    }else if (urlToOpen == "test-url"){
-                        materialDialog.dismiss()
-                        openTestUrl()
-                    }
-                    else{
-                        Toast.makeText(this, "Invalid Url!", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .positiveButton {  }
-                .show()
+            openUrlSelectionDialog()
         }
 
         refreshSelectedUser()
@@ -63,6 +46,52 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+        }
+    }
+
+    private fun getUrlFromPrefOrIntent(): String? {
+        return if (intent.action == Intent.ACTION_VIEW) {
+            intent.data?.toString()
+        } else {
+            PreferenceManager.getString(this, PreferenceManager.KEY_LAST_ENTERED_URL)
+        }
+    }
+
+    private fun openUrlSelectionDialog(){
+        MaterialDialog(this)
+            .title(text = "Enter URL")
+            .cancelOnTouchOutside(true)
+            .negativeButton(text = "Test URL"){
+                openTestUrl()
+            }
+            .checkBoxPrompt(text = "Make a preview call", onToggle = null)
+            .input(prefill = getUrlFromPrefOrIntent()) { materialDialog, charSequence ->
+                val urlToOpen = charSequence.toString()
+                if (urlToOpen.isNotEmpty() && Patterns.WEB_URL.matcher(urlToOpen).matches()){
+                    materialDialog.dismiss()
+                    WebViewActivity.startActivity(this, urlToOpen, if (materialDialog.isCheckPromptChecked()) InteractionType.WEB_SHARING else InteractionType.IN_CALL)
+                }else if (urlToOpen == "test-url"){
+                    materialDialog.dismiss()
+                    openTestUrl()
+                }
+                else{
+                    Toast.makeText(this, "Invalid Url!", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .positiveButton {  }
+            .show()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        Log.d("MainActivity", "onNewIntent: ")
+        consumeIntent()
+    }
+
+    private fun consumeIntent(){
+        if (intent.action == Intent.ACTION_VIEW) {
+            openUrlSelectionDialog()
         }
     }
 
