@@ -120,6 +120,8 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
 
         webView.addJavascriptInterface(jsInterface, JS_INTERFACE_OBJECT_NAME)
 
+        webView.settings.mediaPlaybackRequiresUserGesture = false
+
         clearLog.setOnClickListener {
             logText.text = ""
         }
