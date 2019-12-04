@@ -1,3 +1,11 @@
+# From v2.0:
+
+## Bug Fixes
+* Fixed audio stream auto play bug
+
+#### Updated Dependencies
+* Kotlin to 1.3.61 
+
 # From v1.7:
 
 # Major Changes
