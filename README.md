@@ -86,6 +86,25 @@ The param key to this id is: `id`. Thus making the url have the following format
 
 The uniqueness of this id is guaranteed when called from the QTalk application and can be used by the game developer as a unique key to store game level information. 
 
+### Interaction types:
+Games on QTalk can run in two modes: 
+1. In-call mode
+2. Web sharing mode
+
+The in-call mode is the normal mode (one which happens between two users on a call on QTalk) and the web sharing mode is more of a preview mode, when one side has the QTalk app and the
+other side runs the same functionality on the web browser. A couple of things have to be done to make it work for the web sharing mode, most of it is abstracted and available as a JS file hosted on 
+a CDN. 
+
+The file should rely on the following function inside the QTalk app to tell what mode the game is currently running in:
+
+```javascript
+QTalkApp.getInteractionType()
+```
+
+This function returns a string which can be "IN_CALL" for the in-call mode or "WEB_SHARING" for the web sharing mode. 
+
+Note: For JS clients accessing the older version of QTalk not having this API, the default mode to be assumed should be "IN_CALL". 
+
 ## Testing steps
 
 1. To test with the underlying `test.html` file, select the "test-url" option in the input dialog or type "test-url" when prompted for a URL. [Link](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html)
