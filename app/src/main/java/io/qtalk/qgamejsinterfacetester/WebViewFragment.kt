@@ -62,7 +62,7 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
 
     private fun writeParticipantInfoAndCallDetailsToRTDB(){
 
-        val selectedUser = getSelectedUserFromPref()?: run {
+        val selectedUser = getSelectedUserFromPref()?.generateSHA1() ?: run {
             Toast.makeText(activity!!, "No user selected!", Toast.LENGTH_SHORT).show()
             return
         }

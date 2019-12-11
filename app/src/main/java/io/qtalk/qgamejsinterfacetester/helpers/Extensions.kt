@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package io.qtalk.qgamejsinterfacetester.helpers
 
 import android.content.Context
