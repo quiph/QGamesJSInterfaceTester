@@ -1,3 +1,8 @@
+# From v2.1:
+
+## Bug Fixes
+* Fixed user id writing for a preview call. 
+
 # From v2.0:
 
 ## Bug Fixes
