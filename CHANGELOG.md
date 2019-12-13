@@ -1,3 +1,15 @@
+# From v2.2:
+
+# Major Changes
+* Writing call ended at to RTDB
+
+## New Features
+* Writing call ended at to RTDB
+* Adding app icon
+
+#### Updated Dependencies
+* Android gradle plugin
+
 # From v2.1:
 
 ## Bug Fixes

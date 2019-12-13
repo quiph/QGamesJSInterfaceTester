@@ -10,8 +10,8 @@ android {
         applicationId "io.qtalk.qgamejsinterfacetester"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 11 // cause version name started as 1.0 and version code as 1
-        versionName "2.2"
+        versionCode 12 // cause version name started as 1.0 and version code as 1
+        versionName "2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -49,8 +49,8 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:3.0.2'
     implementation 'com.afollestad.material-dialogs:input:3.0.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha03'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
 }
 
 apply plugin: 'com.google.gms.google-services'
