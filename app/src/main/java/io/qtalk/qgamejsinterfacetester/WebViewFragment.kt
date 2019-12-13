@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ConsoleMessage
 import android.widget.Toast
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.IgnoreExtraProperties
 import com.google.firebase.database.PropertyName
@@ -28,9 +29,9 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         private const val ARG_URL_STRING = "arg-url"
         private const val ARG_INTERACTION_TYPE = "arg-interaction-type"
 
-        private var isTestUrl = false
-
-        private lateinit var interactionType: InteractionType
+        private const val RTDB_CHILD_CALL_DETAILS = "clDts"
+        private const val RTDB_CHILD_PARTICIPANTS = "prtcpnts"
+        private const val RTDB_VALUE_CALL_ENDED_AT = "clEdAt"
 
         fun init(url: String, interactionType: InteractionType = InteractionType.IN_CALL): WebViewFragment {
             return WebViewFragment().apply {
@@ -42,7 +43,13 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         }
     }
 
+    private var isTestUrl = false
+
+    private lateinit var interactionType: InteractionType
+
     private lateinit var jsInterface: JSInterface
+
+    private lateinit var rtdbReference: DatabaseReference
 
     private data class TestUserObject(
         val tstId: String,
@@ -51,7 +58,7 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
     )
 
     @IgnoreExtraProperties
-    data class RTDBPreviewCallDetails(
+    private data class RTDBPreviewCallDetails(
         @get:PropertyName("rtcClId")
         @set:PropertyName("rtcClId")
         var rtcCallId: String,
@@ -82,14 +89,15 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         val ref = database.getReference("qtalkDebugAndStaging/calls").child(callId)
 
         // store the participant info with the key as the user id
-        ref.child("prtcpnts").child(selectedUser).setValue(TestUserObject(selectedUser))
+        ref.child(RTDB_CHILD_PARTICIPANTS).child(selectedUser).setValue(TestUserObject(selectedUser))
 
         // store call details
-        ref.child("clDts").setValue(RTDBPreviewCallDetails(
+        ref.child(RTDB_CHILD_CALL_DETAILS).setValue(RTDBPreviewCallDetails(
             callId,
             System.currentTimeMillis()
         ))
 
+        rtdbReference = ref
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -114,6 +122,13 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         if (interactionType == InteractionType.WEB_SHARING) {
             // write to QTalks RTDB here as participant information needs to be added in the array.
             writeParticipantInfoAndCallDetailsToRTDB()
+
+            endCallButton.visibility = View.VISIBLE
+
+            endCallButton.setOnClickListener{
+                rtdbReference.child(RTDB_CHILD_CALL_DETAILS).child(RTDB_VALUE_CALL_ENDED_AT).setValue(System.currentTimeMillis())
+                activity?.finish()
+            }
         }
 
         jsInterface = JSInterface(this)
