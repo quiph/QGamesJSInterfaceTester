@@ -1,3 +1,11 @@
+# From v2.3:
+
+# Major Changes
+* Adding remote user id in QTalkTestUsers.
+
+## Bug Fixes
+* Fixed bug of pushing firebaseId as tstId in QTalk RTDB
+
 # From v2.2:
 
 # Major Changes
