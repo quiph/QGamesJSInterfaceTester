@@ -15,6 +15,7 @@ import com.google.firebase.database.PropertyName
 import io.qtalk.qgamejsinterfacetester.core.InteractionType
 import io.qtalk.qgamejsinterfacetester.core.JSInterface
 import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
+import io.qtalk.qgamejsinterfacetester.helpers.QTalkTestUsers
 import io.qtalk.qgamejsinterfacetester.helpers.generateSHA1
 import io.qtalk.qgamejsinterfacetester.views.PermissionAwareWebViewFragment
 import kotlinx.android.synthetic.main.webview_fragment.*
@@ -69,10 +70,14 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
 
     private fun writeParticipantInfoAndCallDetailsToRTDB(){
 
-        val selectedUser = getSelectedUserFromPref()?.generateSHA1() ?: run {
-            Toast.makeText(activity!!, "No user selected!", Toast.LENGTH_SHORT).show()
-            return
-        }
+        // while writing the information to RTDB, we create the key as the user id
+        val selectedUser = QTalkTestUsers
+            .values()
+            .firstOrNull { it.userName == PreferenceManager.getString(activity!!, PreferenceManager.KEY_SELECTED_USER) }?.userIdRemote
+            ?: run {
+                Toast.makeText(activity!!, "No user selected!", Toast.LENGTH_SHORT).show()
+                return
+            }
 
         val loadedUrl = getLoadedUrl()!!
 
