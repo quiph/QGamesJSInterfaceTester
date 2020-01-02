@@ -1,5 +1,7 @@
 package io.qtalk.qgamejsinterfacetester
 
+import android.content.Context
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -26,7 +28,9 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         private const val JS_INTERFACE_OBJECT_NAME = "QTalkApp"
 
         private const val TEST_TOKEN =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
+                    ".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ" +
+                    ".SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
         private const val ARG_URL_STRING = "arg-url"
         private const val ARG_INTERACTION_TYPE = "arg-interaction-type"
@@ -157,12 +161,29 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
             // write to QTalks RTDB here as participant information needs to be added in the array.
             writeParticipantInfoAndCallDetailsToRTDB()
 
-            endCallButton.visibility = View.VISIBLE
+            webShareCallButtons.visibility = View.VISIBLE
+
+            val audioManager = context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            audioManager.isSpeakerphoneOn = true
+            audioManager.isMicrophoneMute = false
+
+            audioStateButton.isSelected = true
+            muteCallButton.isSelected = false
 
             endCallButton.setOnClickListener {
                 rtdbReference.child(RTDB_CHILD_CALL_DETAILS).child(RTDB_VALUE_CALL_ENDED_AT)
                     .setValue(System.currentTimeMillis())
                 activity?.finish()
+            }
+
+            audioStateButton.setOnClickListener {
+                audioManager.isSpeakerphoneOn = !audioManager.isSpeakerphoneOn
+                audioStateButton.isSelected = audioManager.isSpeakerphoneOn
+            }
+
+            muteCallButton.setOnClickListener {
+                audioManager.isMicrophoneMute = !audioManager.isMicrophoneMute
+                muteCallButton.isSelected = audioManager.isMicrophoneMute
             }
         }
 
