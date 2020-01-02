@@ -20,12 +20,13 @@ import io.qtalk.qgamejsinterfacetester.helpers.generateSHA1
 import io.qtalk.qgamejsinterfacetester.views.PermissionAwareWebViewFragment
 import kotlinx.android.synthetic.main.webview_fragment.*
 
-class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterfaceBridge {
+class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfaceBridge {
 
     companion object {
         private const val JS_INTERFACE_OBJECT_NAME = "QTalkApp"
 
-        private const val TEST_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        private const val TEST_TOKEN =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
         private const val ARG_URL_STRING = "arg-url"
         private const val ARG_INTERACTION_TYPE = "arg-interaction-type"
@@ -34,7 +35,10 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         private const val RTDB_CHILD_PARTICIPANTS = "prtcpnts"
         private const val RTDB_VALUE_CALL_ENDED_AT = "clEdAt"
 
-        fun init(url: String, interactionType: InteractionType = InteractionType.IN_CALL): WebViewFragment {
+        fun init(
+            url: String,
+            interactionType: InteractionType = InteractionType.IN_CALL
+        ): WebViewFragment {
             return WebViewFragment().apply {
                 arguments = Bundle(1).also {
                     it.putString(ARG_URL_STRING, url)
@@ -68,12 +72,17 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         var dialedAt: Long
     )
 
-    private fun writeParticipantInfoAndCallDetailsToRTDB(){
+    private fun writeParticipantInfoAndCallDetailsToRTDB() {
 
         // while writing the information to RTDB, we create the key as the user id
         val selectedUser = QTalkTestUsers
             .values()
-            .firstOrNull { it.userName == PreferenceManager.getString(activity!!, PreferenceManager.KEY_SELECTED_USER) }?.userIdRemote
+            .firstOrNull {
+                it.userName == PreferenceManager.getString(
+                    activity!!,
+                    PreferenceManager.KEY_SELECTED_USER
+                )
+            }?.userIdRemote
             ?: run {
                 Toast.makeText(activity!!, "No user selected!", Toast.LENGTH_SHORT).show()
                 return
@@ -81,12 +90,16 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
 
         val loadedUrl = getLoadedUrl()!!
 
-        val callId = Uri.parse(loadedUrl).getQueryParameter("id")?: run {
-            Toast.makeText(activity!!, "No Call ID provided, check entered URL!", Toast.LENGTH_LONG).show()
+        val callId = Uri.parse(loadedUrl).getQueryParameter("id") ?: run {
+            Toast.makeText(activity!!, "No Call ID provided, check entered URL!", Toast.LENGTH_LONG)
+                .show()
             return
         }
 
-        Log.d("WebViewFragment", "writeParticipantInfoAndCallDetailsToRTDB: ${callId}, $selectedUser")
+        Log.d(
+            "WebViewFragment",
+            "writeParticipantInfoAndCallDetailsToRTDB: ${callId}, $selectedUser"
+        )
 
         val database = FirebaseDatabase.getInstance()
 
@@ -94,18 +107,25 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         val ref = database.getReference("qtalkDebugAndStaging/calls").child(callId)
 
         // store the participant info with the key as the user id
-        ref.child(RTDB_CHILD_PARTICIPANTS).child(selectedUser).setValue(TestUserObject(selectedUser))
+        ref.child(RTDB_CHILD_PARTICIPANTS).child(selectedUser)
+            .setValue(TestUserObject(selectedUser))
 
         // store call details
-        ref.child(RTDB_CHILD_CALL_DETAILS).setValue(RTDBPreviewCallDetails(
-            callId,
-            System.currentTimeMillis()
-        ))
+        ref.child(RTDB_CHILD_CALL_DETAILS).setValue(
+            RTDBPreviewCallDetails(
+                callId,
+                System.currentTimeMillis()
+            )
+        )
 
         rtdbReference = ref
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.webview_fragment, container, false)
     }
 
@@ -117,10 +137,19 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         isTestUrl = loadedUrl.startsWith("file:///")
 
         if (!isTestUrl) {
-            PreferenceManager.writeString(activity!!, PreferenceManager.KEY_LAST_ENTERED_URL, loadedUrl)
+            PreferenceManager.writeString(
+                activity!!,
+                PreferenceManager.KEY_LAST_ENTERED_URL,
+                loadedUrl
+            )
         }
 
-        interactionType = InteractionType.valueOf((arguments?: return).getString(ARG_INTERACTION_TYPE, InteractionType.IN_CALL.name))
+        interactionType = InteractionType.valueOf(
+            (arguments ?: return).getString(
+                ARG_INTERACTION_TYPE,
+                InteractionType.IN_CALL.name
+            )
+        )
 
         Log.d("WebViewFragment", "onViewCreated: interaction type: $interactionType")
 
@@ -130,8 +159,9 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
 
             endCallButton.visibility = View.VISIBLE
 
-            endCallButton.setOnClickListener{
-                rtdbReference.child(RTDB_CHILD_CALL_DETAILS).child(RTDB_VALUE_CALL_ENDED_AT).setValue(System.currentTimeMillis())
+            endCallButton.setOnClickListener {
+                rtdbReference.child(RTDB_CHILD_CALL_DETAILS).child(RTDB_VALUE_CALL_ENDED_AT)
+                    .setValue(System.currentTimeMillis())
                 activity?.finish()
             }
         }
@@ -169,22 +199,28 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
         return getSelectedUserFromPref()?.generateSHA1() ?: TEST_TOKEN
     }
 
-    private fun getSelectedUserFromPref() = PreferenceManager.getString(activity!!, PreferenceManager.KEY_SELECTED_USER)
+    private fun getSelectedUserFromPref() =
+        PreferenceManager.getString(activity!!, PreferenceManager.KEY_SELECTED_USER)
 
-    override fun notifyGameRoundStarted(){
+    override fun notifyGameRoundStarted() {
         Toast.makeText(context, "Game round started notified!", Toast.LENGTH_SHORT).show()
     }
 
-    override fun notifyGameRoundEnded(){
+    override fun notifyGameRoundEnded() {
         Toast.makeText(context, "Game round ended notified!", Toast.LENGTH_SHORT).show()
     }
 
-    override fun updateGamePrompts(prompts: String){
+    override fun updateGamePrompts(prompts: String) {
         if (isTestUrl) {
             webView.handler.post {
-                webView.evaluateJavascript("setPromptToText($prompts)") { Log.d("JSInterface", "onReceiveValue") }
+                webView.evaluateJavascript("setPromptToText($prompts)") {
+                    Log.d(
+                        "JSInterface",
+                        "onReceiveValue"
+                    )
+                }
             }
-        }else {
+        } else {
             Toast.makeText(context, "Prompts recieved: $prompts", Toast.LENGTH_LONG).show()
         }
     }
@@ -192,9 +228,14 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
     override fun clearGamePrompts() {
         if (isTestUrl) {
             webView.handler.post {
-                webView.evaluateJavascript("setPromptToText(\"\")") { Log.d("JSInterface", "onReceiveValue") }
+                webView.evaluateJavascript("setPromptToText(\"\")") {
+                    Log.d(
+                        "JSInterface",
+                        "onReceiveValue"
+                    )
+                }
             }
-        }else {
+        } else {
             Toast.makeText(context, "Prompts cleared", Toast.LENGTH_LONG).show()
         }
     }
@@ -204,7 +245,7 @@ class WebViewFragment: PermissionAwareWebViewFragment(), JSInterface.JSInterface
     }
 
     // test only
-    override fun clearWebViewCache(){
+    override fun clearWebViewCache() {
         Log.d("JSInterfaceBridge", "clearWebViewCache: ")
         webView.handler.post {
             Toast.makeText(context, "Cache cleared!", Toast.LENGTH_LONG).show()

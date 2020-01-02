@@ -33,7 +33,8 @@ class ExpandableLinearLayout @JvmOverloads constructor(
     init {
         orientation = VERTICAL
         View.inflate(context, R.layout.expandable_linear_layout, this)
-        attribArray = context.theme.obtainStyledAttributes(attrs, R.styleable.ExpandableLinearLayout, 0, 0)
+        attribArray =
+            context.theme.obtainStyledAttributes(attrs, R.styleable.ExpandableLinearLayout, 0, 0)
     }
 
     fun getHeaderLayout() = headerContentLayout
@@ -53,25 +54,59 @@ class ExpandableLinearLayout @JvmOverloads constructor(
         subTitleTextView = findViewById(R.id.subtitle)
         iconLabelTextView = findViewById(R.id.iconLabel)
 
-        headerTextView.setVisibilityByText(getTextFromAttribByRes(attribArray, R.styleable.ExpandableLinearLayout_headerText))
-        headerTextView.setTextViewStyle(getStyleFromAttribByRes(attribArray, R.styleable.ExpandableLinearLayout_headerTextStyle))
+        headerTextView.setVisibilityByText(
+            getTextFromAttribByRes(
+                attribArray,
+                R.styleable.ExpandableLinearLayout_headerText
+            )
+        )
+        headerTextView.setTextViewStyle(
+            getStyleFromAttribByRes(
+                attribArray,
+                R.styleable.ExpandableLinearLayout_headerTextStyle
+            )
+        )
 
-        subTitleTextView.setVisibilityByText(getTextFromAttribByRes(attribArray, R.styleable.ExpandableLinearLayout_subtitleText))
-        subTitleTextView.setTextViewStyle(getStyleFromAttribByRes(attribArray, R.styleable.ExpandableLinearLayout_subtitleTextStyle))
+        subTitleTextView.setVisibilityByText(
+            getTextFromAttribByRes(
+                attribArray,
+                R.styleable.ExpandableLinearLayout_subtitleText
+            )
+        )
+        subTitleTextView.setTextViewStyle(
+            getStyleFromAttribByRes(
+                attribArray,
+                R.styleable.ExpandableLinearLayout_subtitleTextStyle
+            )
+        )
 
-        iconLabelTextView.setTextViewStyle(getStyleFromAttribByRes(attribArray, R.styleable.ExpandableLinearLayout_iconLabelTextStyle))
-        iconLabelTextView.setVisibilityByText(getTextFromAttribByRes(attribArray, R.styleable.ExpandableLinearLayout_iconLabelText))
+        iconLabelTextView.setTextViewStyle(
+            getStyleFromAttribByRes(
+                attribArray,
+                R.styleable.ExpandableLinearLayout_iconLabelTextStyle
+            )
+        )
+        iconLabelTextView.setVisibilityByText(
+            getTextFromAttribByRes(
+                attribArray,
+                R.styleable.ExpandableLinearLayout_iconLabelText
+            )
+        )
 
-        val iconSize: Float = attribArray.getDimension(R.styleable.ExpandableLinearLayout_iconSize, 0f)
+        val iconSize: Float =
+            attribArray.getDimension(R.styleable.ExpandableLinearLayout_iconSize, 0f)
         if (iconSize != 0f) {
             directionCaret.layoutParams.height = iconSize.toInt()
             directionCaret.layoutParams.width = iconSize.toInt()
         }
-        val backgroundRes: Int = attribArray.getResourceId(R.styleable.ExpandableLinearLayout_headerBackground, 0)
+        val backgroundRes: Int =
+            attribArray.getResourceId(R.styleable.ExpandableLinearLayout_headerBackground, 0)
         if (backgroundRes != 0)
             headerContentLayout.setBackgroundResource(backgroundRes)
 //        val canAutoGenerateSubText : Boolean = attribArray.getBoolean(R.styleable.ExpandableLinearLayout_autoGenerateSubtitleText, true)
-        subTitleTextView.setVisibilityByText(/*if (canAutoGenerateSubText) autoGenerateSubTitleText() else */getTextFromAttribByRes(attribArray, R.styleable.ExpandableLinearLayout_subtitleText))
+        subTitleTextView.setVisibilityByText(/*if (canAutoGenerateSubText) autoGenerateSubTitleText() else */
+            getTextFromAttribByRes(attribArray, R.styleable.ExpandableLinearLayout_subtitleText)
+        )
 
         headerContentLayout.setOnClickListener { toggleContentLayouts() }
 
@@ -200,19 +235,27 @@ class ExpandableLinearLayout @JvmOverloads constructor(
     }
 
     override fun generateDefaultLayoutParams(): LinearLayout.LayoutParams {
-        return LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        return LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 
     override fun checkLayoutParams(p: ViewGroup.LayoutParams?): Boolean {
         return p is ExpandableLinearLayout.LayoutParams
     }
 
-    class LayoutParams(context: Context?, attrs: AttributeSet?) : LinearLayout.LayoutParams(context, attrs) {
+    class LayoutParams(context: Context?, attrs: AttributeSet?) :
+        LinearLayout.LayoutParams(context, attrs) {
         var isForcedInvisible: Boolean = false
 
         init {
-            val attribArray: TypedArray? = context?.obtainStyledAttributes(attrs, R.styleable.ExpandableLinearLayout_Layout)
-            attribArray?.getBoolean(R.styleable.ExpandableLinearLayout_Layout_isForcedInvisible, false)?.let {
+            val attribArray: TypedArray? =
+                context?.obtainStyledAttributes(attrs, R.styleable.ExpandableLinearLayout_Layout)
+            attribArray?.getBoolean(
+                R.styleable.ExpandableLinearLayout_Layout_isForcedInvisible,
+                false
+            )?.let {
                 isForcedInvisible = it
             }
             attribArray?.recycle()

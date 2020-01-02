@@ -5,7 +5,7 @@ import android.webkit.JavascriptInterface
 @Suppress("unused")
 class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
 
-    fun setJSInterfaceBridge(jsInterfaceBridge: JSInterfaceBridge?){
+    fun setJSInterfaceBridge(jsInterfaceBridge: JSInterfaceBridge?) {
         this.jsInterfaceBridge = jsInterfaceBridge
     }
 
@@ -15,17 +15,17 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
     }
 
     @JavascriptInterface
-    fun notifyGameRoundStarted(){
+    fun notifyGameRoundStarted() {
         jsInterfaceBridge?.notifyGameRoundStarted()
     }
 
     @JavascriptInterface
-    fun notifyGameRoundEnded(){
+    fun notifyGameRoundEnded() {
         jsInterfaceBridge?.notifyGameRoundEnded()
     }
 
     @JavascriptInterface
-    fun updateGamePrompts(prompts: String){
+    fun updateGamePrompts(prompts: String) {
         jsInterfaceBridge?.updateGamePrompts(prompts)
     }
 
@@ -34,14 +34,17 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
         jsInterfaceBridge?.clearGamePrompts()
     }
 
-    @Deprecated("Not supported any more", replaceWith = ReplaceWith("saveBase64Image(base64EncodedImageString)"))
+    @Deprecated(
+        "Not supported any more",
+        replaceWith = ReplaceWith("saveBase64Image(base64EncodedImageString)")
+    )
     @JavascriptInterface
-    fun onBase64ImageSaved(base64EncodedImageString: String){
+    fun onBase64ImageSaved(base64EncodedImageString: String) {
         saveBase64Image(base64EncodedImageString)
     }
 
     @JavascriptInterface
-    fun saveBase64Image(base64EncodedImageString: String){
+    fun saveBase64Image(base64EncodedImageString: String) {
         jsInterfaceBridge?.saveBase64Image(base64EncodedImageString)
     }
 
@@ -52,11 +55,11 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
 
     // test only
     @JavascriptInterface
-    fun clearWebViewCache(){
+    fun clearWebViewCache() {
         jsInterfaceBridge?.clearWebViewCache()
     }
 
-    interface JSInterfaceBridge{
+    interface JSInterfaceBridge {
 
         fun getUserAuthToken(): String
 

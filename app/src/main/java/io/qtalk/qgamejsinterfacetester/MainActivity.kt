@@ -40,7 +40,11 @@ class MainActivity : AppCompatActivity() {
                 .title(text = "Select User")
                 .show {
                     listItems(items = QTalkTestUsers.values().map { it.displayName }) { _, index, _ ->
-                        PreferenceManager.writeString(this@MainActivity, PreferenceManager.KEY_SELECTED_USER, QTalkTestUsers.values()[index].userName)
+                        PreferenceManager.writeString(
+                            this@MainActivity,
+                            PreferenceManager.KEY_SELECTED_USER,
+                            QTalkTestUsers.values()[index].userName
+                        )
                         refreshSelectedUser()
                         dismiss()
                     }
@@ -60,28 +64,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun openUrlSelectionDialog(){
+    private fun openUrlSelectionDialog() {
         MaterialDialog(this)
             .title(text = "Enter URL")
             .cancelOnTouchOutside(true)
-            .negativeButton(text = "Test URL"){
+            .negativeButton(text = "Test URL") {
                 openTestUrl()
             }
             .checkBoxPrompt(text = "Make a preview call", onToggle = null)
             .input(prefill = getUrlFromPrefOrIntent()) { materialDialog, charSequence ->
                 val urlToOpen = charSequence.toString()
-                if (urlToOpen.isNotEmpty() && Patterns.WEB_URL.matcher(urlToOpen).matches()){
+                if (urlToOpen.isNotEmpty() && Patterns.WEB_URL.matcher(urlToOpen).matches()) {
                     materialDialog.dismiss()
-                    WebViewActivity.startActivity(this, urlToOpen, if (materialDialog.isCheckPromptChecked()) InteractionType.WEB_SHARING else InteractionType.IN_CALL)
-                }else if (urlToOpen == "test-url"){
+                    WebViewActivity.startActivity(
+                        this,
+                        urlToOpen,
+                        if (materialDialog.isCheckPromptChecked()) InteractionType.WEB_SHARING else InteractionType.IN_CALL
+                    )
+                } else if (urlToOpen == "test-url") {
                     materialDialog.dismiss()
                     openTestUrl()
-                }
-                else{
+                } else {
                     Toast.makeText(this, "Invalid Url!", Toast.LENGTH_SHORT).show()
                 }
             }
-            .positiveButton {  }
+            .positiveButton { }
             .show()
     }
 
@@ -92,13 +99,13 @@ class MainActivity : AppCompatActivity() {
         consumeIntent()
     }
 
-    private fun consumeIntent(){
+    private fun consumeIntent() {
         if (intent.action == Intent.ACTION_VIEW) {
             openUrlSelectionDialog()
         }
     }
 
-    private fun openTestUrl(){
+    private fun openTestUrl() {
         val testUrl = "file:///android_asset/test.html"
         WebViewActivity.startActivity(this, testUrl)
     }

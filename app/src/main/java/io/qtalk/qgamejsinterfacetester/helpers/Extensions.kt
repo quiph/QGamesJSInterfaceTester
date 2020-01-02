@@ -23,13 +23,13 @@ fun ByteArray.toHexString(): String {
     return hexString.toString()
 }
 
-fun String.generateSHA1(): String{
+fun String.generateSHA1(): String {
     return MessageDigest.getInstance("SHA-1")
         .digest(this.toByteArray(Charset.forName("UTF-8")))
         .toHexString()
 }
 
-fun String.generateMD5(): String{
+fun String.generateMD5(): String {
     return MessageDigest.getInstance("MD5")
         .digest(this.toByteArray(Charset.forName("UTF-8")))
         .toHexString()

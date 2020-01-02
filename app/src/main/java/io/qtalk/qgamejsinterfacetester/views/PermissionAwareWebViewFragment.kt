@@ -15,7 +15,8 @@ import io.qtalk.qgamejsinterfacetester.helpers.PermissionAwareWebChromeClient
 import io.qtalk.qgamejsinterfacetester.helpers.formatUrl
 import kotlinx.android.synthetic.main.fragment_permission_aware_webview.*
 
-open class PermissionAwareWebViewFragment : Fragment(), PermissionAwareWebChromeClient.WebChromeClientPermissionCallbacks {
+open class PermissionAwareWebViewFragment : Fragment(),
+    PermissionAwareWebChromeClient.WebChromeClientPermissionCallbacks {
 
     companion object {
 
@@ -46,14 +47,21 @@ open class PermissionAwareWebViewFragment : Fragment(), PermissionAwareWebChrome
 
     fun getLoadedUrl(): String? = url
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_permission_aware_webview, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadWebView(arguments?.getString(ARG_URL_STRING).formatUrl(), arguments?.getStringArray(ARG_HEADERS))
+        loadWebView(
+            arguments?.getString(ARG_URL_STRING).formatUrl(),
+            arguments?.getStringArray(ARG_HEADERS)
+        )
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -89,7 +97,11 @@ open class PermissionAwareWebViewFragment : Fragment(), PermissionAwareWebChrome
         } ?: emptyMap()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         permissionAwareWebChromeClient.onPermissionRequestResult(permissions, grantResults)
     }

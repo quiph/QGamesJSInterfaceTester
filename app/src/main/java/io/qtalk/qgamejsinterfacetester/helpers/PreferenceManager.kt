@@ -14,7 +14,7 @@ object PreferenceManager {
         return getSharedPreferences(context).getString(key, null)
     }
 
-    fun writeString(context: Context, key: String, value: String){
+    fun writeString(context: Context, key: String, value: String) {
         getSharedPreferences(context).edit().putString(key, value).apply()
     }
 

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.webkit.ConsoleMessage
 import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
-import java.lang.IllegalStateException
 
 class PermissionAwareWebChromeClient(
     private val context: Context,
@@ -50,7 +49,11 @@ class PermissionAwareWebChromeClient(
                 e.printStackTrace()
             }
         } else {
-            webChromeClientPermissionCallbacks?.onRequestAndroidPermissions(arrayOf(androidPermission))
+            webChromeClientPermissionCallbacks?.onRequestAndroidPermissions(
+                arrayOf(
+                    androidPermission
+                )
+            )
         }
     }
 
