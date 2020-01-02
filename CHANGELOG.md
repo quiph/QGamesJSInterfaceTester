@@ -1,3 +1,8 @@
+# From v2.4:
+
+# Major Changes
+* Adding audio state and microphone controls - Suraj Shah
+
 # From v2.3:
 
 # Major Changes
