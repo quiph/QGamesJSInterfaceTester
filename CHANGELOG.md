@@ -1,3 +1,8 @@
+# From v2.5:
+
+# Major Changes
+* Adding support for analytics event
+
 # From v2.4:
 
 # Major Changes
