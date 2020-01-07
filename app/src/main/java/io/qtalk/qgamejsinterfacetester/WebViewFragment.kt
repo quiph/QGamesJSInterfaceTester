@@ -14,8 +14,10 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.IgnoreExtraProperties
 import com.google.firebase.database.PropertyName
+import com.google.gson.Gson
 import io.qtalk.qgamejsinterfacetester.core.InteractionType
 import io.qtalk.qgamejsinterfacetester.core.JSInterface
+import io.qtalk.qgamejsinterfacetester.core.WebAnalyticsEvent
 import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
 import io.qtalk.qgamejsinterfacetester.helpers.QTalkTestUsers
 import io.qtalk.qgamejsinterfacetester.helpers.generateSHA1
@@ -59,6 +61,10 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
     private lateinit var jsInterface: JSInterface
 
     private lateinit var rtdbReference: DatabaseReference
+
+    private val gson by lazy {
+        Gson()
+    }
 
     private data class TestUserObject(
         val tstId: String,
@@ -244,6 +250,27 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         } else {
             Toast.makeText(context, "Prompts recieved: $prompts", Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun pushAnalyticsEvent(eventJson: String) {
+        Log.d("WebViewFragment", "pushAnalyticsEvent: $eventJson")
+        val analyticsEvent =
+            gson.fromJson<WebAnalyticsEvent>(eventJson, WebAnalyticsEvent::class.java)
+
+        Toast.makeText(
+            context,
+            """
+                |Analytics Event Pushed:
+                |Event name: ${analyticsEvent.eventName}
+                |Params: ${analyticsEvent
+                .eventParameters
+                ?.entries
+                ?.joinToString(separator = "\n\t", prefix = "\n\t") {
+                    "${it.key}:${it.value}"
+                } ?: "NA"}
+            |""".trimMargin(),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun clearGamePrompts() {

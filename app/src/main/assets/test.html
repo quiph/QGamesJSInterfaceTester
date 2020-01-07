@@ -31,6 +31,18 @@
         console.log("This is a test log")
     }
 
+    function pushAnalyticsEvent(){
+        var eventJson = {
+                        "eventName": "test event",
+                        "eventParameters" :
+                        {
+                            "field1" : "value1",
+                            "field2" : "value2"
+                        }
+                  }
+        QTalkApp.pushAnalyticsEvent(JSON.stringify(eventJson));
+    }
+
     </script>
 </head>
 <body>
@@ -52,6 +64,9 @@
 <br>
 <br>
 <button type="button" onclick="QTalkApp.notifyGameRoundEnded()">Notify Game Round Ended</button>
+<br>
+<br>
+<button type="button" onclick="pushAnalyticsEvent()">Push test analytics event</button>
 
 <br>
 <br>

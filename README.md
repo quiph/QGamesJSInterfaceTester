@@ -132,6 +132,32 @@ console.log("message")
 
 2. **Clearing the WebView cache**: This clears the underlying WebViews cache as well as disk cache if any found.
 
+## Analytics:
+
+Web activities are capable of pushing top level analytics to the main QTalk app. This can be done by pushing a Json of the following structure:
+
+```Json
+{
+    "eventName": "test event",
+    "eventParameters" :
+    {
+        "field1" : "value1",
+        "field2" : "value2"
+    }
+}
+``` 
+and pushing to `QTalkApp.pushAnalyticsEvent(eventJson)`
+
+Here, `field1` and `value1` are the first values of the map. Please check the [test.html](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html) file for more.
+
+**Note**: An important thing to keep in mind here to push the game name as one of the event parameters, this will be closely monitored and any game 
+failing to do so, will be removed. 
+
+**Note**: Do not forget to stringify the object using 
+
+```javascript
+JSON.stringify(evenrJson)
+```
 
 ### Download the APK: 
 

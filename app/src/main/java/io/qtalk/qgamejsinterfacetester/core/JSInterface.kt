@@ -49,6 +49,11 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
     }
 
     @JavascriptInterface
+    fun pushAnalyticsEvent(eventJson: String) {
+        jsInterfaceBridge?.pushAnalyticsEvent(eventJson)
+    }
+
+    @JavascriptInterface
     fun getInteractionType(): String {
         return jsInterfaceBridge?.getInteractionType() ?: ""
     }
@@ -74,6 +79,8 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
         fun saveBase64Image(base64EncodedImageString: String)
 
         fun getInteractionType(): String
+
+        fun pushAnalyticsEvent(eventJson: String)
 
         // test only
         fun clearWebViewCache()
