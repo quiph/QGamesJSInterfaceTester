@@ -141,19 +141,19 @@ Web activities are capable of pushing top level analytics to the main QTalk app.
     "eventName": "test event",
     "eventParameters" :
     {
-        "field1" : "value1",
-        "field2" : "value2"
+       "Applet" : "Testing",
+       "field1" : "value1",
+       "field2" : "value2"
     }
 }
 ``` 
 and pushing to `QTalkApp.pushAnalyticsEvent(eventJson)`
 
-Here, `field1` and `value1` are the first values of the map. Please check the [test.html](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html) file for more.
+Here, `field1` and `value1` are the first values of the map. Please check the [test.html](https://github.com/quiph/QGamesJSInterfaceTester/blob/master/app/src/main/assets/test.html) file for more. 
 
-**Note**: An important thing to keep in mind here to push the game name as one of the event parameters, this will be closely monitored and any game 
-failing to do so, will be removed. 
+**Note**: Do not forget to stringify the object using
 
-**Note**: Do not forget to stringify the object using 
+**Important**: Make sure the key `Applet` is present in the parameters list and that the other parameters are in normal sentance case.
 
 ```javascript
 JSON.stringify(evenrJson)

@@ -257,20 +257,26 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         val analyticsEvent =
             gson.fromJson<WebAnalyticsEvent>(eventJson, WebAnalyticsEvent::class.java)
 
-        Toast.makeText(
-            context,
-            """
+        if (analyticsEvent.eventParameters.containsKey(WebAnalyticsEvent.KEY_APPLET)) {
+            Toast.makeText(
+                context,
+                """
                 |Analytics Event Pushed:
                 |Event name: ${analyticsEvent.eventName}
-                |Params: ${analyticsEvent
-                .eventParameters
-                ?.entries
-                ?.joinToString(separator = "\n\t", prefix = "\n\t") {
-                    "${it.key}:${it.value}"
-                } ?: "NA"}
+                |Params: 
+                |${analyticsEvent
+                    .eventParameters
+                    .entries
+                    .joinToString(separator = "\n\t", prefix = "\t") {
+                        "${it.key}:${it.value}"
+                    }
+                }
             |""".trimMargin(),
-            Toast.LENGTH_LONG
-        ).show()
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
+            Toast.makeText(context, "[Error] Applet key not provided!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun clearGamePrompts() {
