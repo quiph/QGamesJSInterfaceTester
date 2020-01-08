@@ -1,3 +1,8 @@
+# From v2.6:
+
+# Minor Changes
+* Adding check if "Applet" key is present or not - Suraj Shah
+
 # From v2.5:
 
 # Major Changes
