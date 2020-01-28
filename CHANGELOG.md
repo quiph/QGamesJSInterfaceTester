@@ -1,3 +1,10 @@
+# From v2.7:
+
+# Major Changes
+* Updating the presence state of user to "EXITED" on hang up button clicked.
+* Writing "OUTGOING_VOIP" as call mode inside participants.
+* Making main webview viewport similar to that inside call screen for QTalk
+
 # From v2.6:
 
 # Minor Changes
