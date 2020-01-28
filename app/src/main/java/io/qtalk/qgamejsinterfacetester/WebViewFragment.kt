@@ -40,6 +40,9 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         private const val RTDB_CHILD_CALL_DETAILS = "clDts"
         private const val RTDB_CHILD_PARTICIPANTS = "prtcpnts"
         private const val RTDB_VALUE_CALL_ENDED_AT = "clEdAt"
+        private const val RTDB_PARTICIPANTS_STATE = "stat"
+        private const val RTDB_PARTICIPANTS_STATE_PRESENCE = "prsnc"
+        private const val RTDB_PARTICIPANT_PRESENCE_EXITED = "EXITED"
 
         fun init(
             url: String,
@@ -69,7 +72,7 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
     private data class TestUserObject(
         val tstId: String,
         val iPrv: Boolean = true,
-        val mod: String = "VOIP"
+        val mod: String = "OUTGOING_VOIP"
     )
 
     @IgnoreExtraProperties
@@ -85,14 +88,7 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
     private fun writeParticipantInfoAndCallDetailsToRTDB() {
 
         // while writing the information to RTDB, we create the key as the user id
-        val selectedUser = QTalkTestUsers
-            .values()
-            .firstOrNull {
-                it.userName == PreferenceManager.getString(
-                    activity!!,
-                    PreferenceManager.KEY_SELECTED_USER
-                )
-            }?.userIdRemote
+        val selectedUser = getSelectedTestUser()?.userIdRemote
             ?: run {
                 Toast.makeText(activity!!, "No user selected!", Toast.LENGTH_SHORT).show()
                 return
@@ -129,6 +125,17 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         )
 
         rtdbReference = ref
+    }
+
+    private fun getSelectedTestUser(): QTalkTestUsers? {
+        return QTalkTestUsers
+            .values()
+            .firstOrNull {
+                it.userName == PreferenceManager.getString(
+                    activity!!,
+                    PreferenceManager.KEY_SELECTED_USER
+                )
+            }
     }
 
     override fun onCreateView(
@@ -177,8 +184,18 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
             muteCallButton.isSelected = false
 
             endCallButton.setOnClickListener {
-                rtdbReference.child(RTDB_CHILD_CALL_DETAILS).child(RTDB_VALUE_CALL_ENDED_AT)
+                rtdbReference
+                    .child(RTDB_CHILD_CALL_DETAILS)
+                    .child(RTDB_VALUE_CALL_ENDED_AT)
                     .setValue(System.currentTimeMillis())
+
+                rtdbReference
+                    .child(RTDB_CHILD_PARTICIPANTS)
+                    .child(getSelectedTestUser()?.userIdRemote!!)
+                    .child(RTDB_PARTICIPANTS_STATE)
+                    .child(RTDB_PARTICIPANTS_STATE_PRESENCE)
+                    .setValue(RTDB_PARTICIPANT_PRESENCE_EXITED)
+
                 activity?.finish()
             }
 

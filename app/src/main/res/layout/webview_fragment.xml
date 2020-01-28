@@ -63,20 +63,29 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/logView"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/bannerCallActionNotice"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:id="@+id/bannerCallActionNotice"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="80dp"/>
 
     <androidx.constraintlayout.widget.Group
         android:layout_width="wrap_content"
         tools:visibility="visible"
         android:visibility="gone"
         android:id="@+id/webShareCallButtons"
-        app:constraint_referenced_ids="endCallButton,muteCallButton,audioStateButton"
+        app:constraint_referenced_ids="endCallButton,muteCallButton,audioStateButton,bannerCallActionNotice"
         android:layout_height="wrap_content"/>
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_width="48dp"
-        app:layout_constraintBottom_toTopOf="@id/muteCallButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/endCallButton"
+        app:layout_constraintEnd_toStartOf="@id/muteCallButton"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:id="@+id/audioStateButton"
@@ -89,9 +98,8 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_width="48dp"
-        app:layout_constraintBottom_toTopOf="@id/endCallButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="22dp"
+        app:layout_constraintBottom_toBottomOf="@id/endCallButton"
+        app:layout_constraintEnd_toStartOf="@id/endCallButton"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:id="@+id/muteCallButton"
