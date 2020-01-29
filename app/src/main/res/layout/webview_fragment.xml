@@ -67,9 +67,6 @@
 
     <View
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
         android:id="@+id/bannerCallActionNotice"
         android:background="#222A30"
         app:layout_constraintBottom_toBottomOf="parent"
