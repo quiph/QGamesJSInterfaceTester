@@ -41,8 +41,15 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         private const val RTDB_CHILD_PARTICIPANTS = "prtcpnts"
         private const val RTDB_VALUE_CALL_ENDED_AT = "clEdAt"
         private const val RTDB_PARTICIPANTS_STATE = "stat"
+        private const val RTDB_PARTICIPANTS_STATE_AUDIO_ROUTE = "audRt"
+        private const val RTDB_PARTICIPANTS_STATE_MUTED = "mut"
         private const val RTDB_PARTICIPANTS_STATE_PRESENCE = "prsnc"
         private const val RTDB_PARTICIPANT_PRESENCE_EXITED = "EXITED"
+
+        private const val RTDB_PARTICIPANT_PRESENCE_AVAILABLE = "AVAILABLE"
+
+        private const val AUDIO_ROUTE_VALUE_SPEAKER = "ROUTE_SPEAKER"
+        private const val AUDIO_ROUTE_VALUE_EARPIECE = "ROUTE_EARPIECE"
 
         fun init(
             url: String,
@@ -115,6 +122,13 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         // store the participant info with the key as the user id
         ref.child(RTDB_CHILD_PARTICIPANTS).child(selectedUser)
             .setValue(TestUserObject(selectedUser))
+
+        // push dummy state
+        getParticipantStateReference().apply {
+            child(RTDB_PARTICIPANTS_STATE_AUDIO_ROUTE).setValue(AUDIO_ROUTE_VALUE_SPEAKER)
+            child(RTDB_PARTICIPANTS_STATE_PRESENCE).setValue(RTDB_PARTICIPANT_PRESENCE_AVAILABLE)
+            child(RTDB_PARTICIPANTS_STATE_MUTED).setValue(0)
+        }
 
         // store call details
         ref.child(RTDB_CHILD_CALL_DETAILS).setValue(
@@ -189,10 +203,7 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
                     .child(RTDB_VALUE_CALL_ENDED_AT)
                     .setValue(System.currentTimeMillis())
 
-                rtdbReference
-                    .child(RTDB_CHILD_PARTICIPANTS)
-                    .child(getSelectedTestUser()?.userIdRemote!!)
-                    .child(RTDB_PARTICIPANTS_STATE)
+                getParticipantStateReference()
                     .child(RTDB_PARTICIPANTS_STATE_PRESENCE)
                     .setValue(RTDB_PARTICIPANT_PRESENCE_EXITED)
 
@@ -219,6 +230,13 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         clearLog.setOnClickListener {
             logText.text = ""
         }
+    }
+
+    private fun getParticipantStateReference(): DatabaseReference {
+        return rtdbReference
+            .child(RTDB_CHILD_PARTICIPANTS)
+            .child(getSelectedTestUser()?.userIdRemote!!)
+            .child(RTDB_PARTICIPANTS_STATE)
     }
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage?) {
