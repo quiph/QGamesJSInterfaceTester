@@ -71,7 +71,7 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:id="@+id/bannerCallActionNotice"
-        android:background="@color/colorPrimaryDark"
+        android:background="#222A30"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_height="80dp"/>
 
@@ -82,6 +82,7 @@
         android:id="@+id/webShareCallButtons"
         app:constraint_referenced_ids="endCallButton,muteCallButton,audioStateButton,bannerCallActionNotice"
         android:layout_height="wrap_content"/>
+
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_width="48dp"
         app:layout_constraintBottom_toBottomOf="@id/endCallButton"
@@ -90,39 +91,38 @@
         android:layout_marginEnd="20dp"
         android:id="@+id/audioStateButton"
         android:elevation="0dp"
-        android:padding="4dp"
-        android:src="@android:drawable/stat_sys_speakerphone"
-        android:tint="@color/call_buttons_state"
-        android:background="@drawable/custom_bg_16dp_primary"
+        android:background="@drawable/speaker_button_states"
         android:layout_height="48dp"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/mic_button_states"
         app:layout_constraintBottom_toBottomOf="@id/endCallButton"
         app:layout_constraintEnd_toStartOf="@id/endCallButton"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:id="@+id/muteCallButton"
         android:elevation="0dp"
-        android:padding="4dp"
-        android:src="@android:drawable/stat_notify_call_mute"
-        android:tint="@color/call_buttons_state"
-        android:background="@drawable/custom_bg_16dp_primary"
-        android:layout_height="48dp"/>
+        />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/ic_circle_solid"
+        android:backgroundTint="#ec7179"
+        android:padding="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_call_end"
+        android:tint="#222A31"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"
         android:id="@+id/endCallButton"
-        android:rotation="135"
         android:elevation="0dp"
-        android:padding="6dp"
-        android:src="@android:drawable/stat_sys_phone_call"
-        android:tint="@android:color/white"
-        android:background="@drawable/custom_bg_8dp_red"
-        android:layout_height="48dp"/>
+        />
     <ProgressBar
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
