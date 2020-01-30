@@ -119,6 +119,8 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         // get reference to clDts/prtcpnts which is where the participants are store in by the main QTalk app.
         val ref = database.getReference("qtalkDebugAndStaging/calls").child(callId)
 
+        rtdbReference = ref
+
         // store the participant info with the key as the user id
         ref.child(RTDB_CHILD_PARTICIPANTS).child(selectedUser)
             .setValue(TestUserObject(selectedUser))
@@ -138,7 +140,6 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
             )
         )
 
-        rtdbReference = ref
     }
 
     private fun getSelectedTestUser(): QTalkTestUsers? {
@@ -213,11 +214,28 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
             audioStateButton.setOnClickListener {
                 audioManager.isSpeakerphoneOn = !audioManager.isSpeakerphoneOn
                 audioStateButton.isSelected = audioManager.isSpeakerphoneOn
+                getParticipantStateReference()
+                    .child(RTDB_PARTICIPANTS_STATE_AUDIO_ROUTE)
+                    .setValue(
+                        if (audioManager.isSpeakerphoneOn) {
+                            AUDIO_ROUTE_VALUE_SPEAKER
+                        } else {
+                            AUDIO_ROUTE_VALUE_EARPIECE
+                        }
+                    )
             }
 
             muteCallButton.setOnClickListener {
                 audioManager.isMicrophoneMute = !audioManager.isMicrophoneMute
                 muteCallButton.isSelected = audioManager.isMicrophoneMute
+                getParticipantStateReference()
+                    .child(RTDB_PARTICIPANTS_STATE_MUTED)
+                    .setValue(
+                        if (audioManager.isMicrophoneMute)
+                            1
+                        else
+                            0
+                    )
             }
         }
 
