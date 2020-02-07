@@ -1,3 +1,14 @@
+# From v2.8:
+
+# Major Changes
+* Changed caller control layout. - Jaseemakhtar
+
+# Minor Changes
+* Marking audio route and mute states in the participants state field in RTDB. - Faisal Ahmed
+
+## Bug Fixes
+* Fixed bug where rtdbReference was referred before being initialised in WebViewFragment.kt.
+
 # From v2.7:
 
 # Major Changes
