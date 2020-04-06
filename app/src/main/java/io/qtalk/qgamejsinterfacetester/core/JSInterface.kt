@@ -58,6 +58,11 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
         return jsInterfaceBridge?.getInteractionType() ?: ""
     }
 
+    @JavascriptInterface
+    fun getUrlList(): String{
+        return jsInterfaceBridge?.getUrlList() ?: ""
+    }
+
     // test only
     @JavascriptInterface
     fun clearWebViewCache() {
@@ -82,6 +87,7 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
 
         fun pushAnalyticsEvent(eventJson: String)
 
+        fun getUrlList(): String
         // test only
         fun clearWebViewCache()
     }

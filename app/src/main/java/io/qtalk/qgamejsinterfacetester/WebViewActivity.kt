@@ -37,7 +37,12 @@ class WebViewActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(
-                R.id.container, WebViewFragment.init(
+                R.id.container,
+//                HomePageTest.init(
+//                    "file:///android_asset/homepage.html",
+//                    InteractionType.IN_CALL
+//                )
+                WebViewFragment.init(
                     intent.getStringExtra(EXTRA_WEBSITE_URL),
                     InteractionType.valueOf(intent.getStringExtra(EXTRA_INTERACTION_TYPE))
                 )

@@ -332,6 +332,10 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         }
     }
 
+    override fun getUrlList(): String {
+        TODO("Not yet implemented")
+    }
+
     override fun clearGamePrompts() {
         if (isTestUrl) {
             webView.handler.post {

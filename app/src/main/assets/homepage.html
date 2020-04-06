@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>QTalk-Browse</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="Qtalk">
+    <meta name="author" content="kushagra">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/psl/1.7.0/psl.min.js"></script>
+    <style>
+      body{
+          margin: 0px;
+      }
+      .main{
+          background-color: #222a31;
+          height: 100%;
+      }
+      a{
+          text-align: center;
+          text-decoration:none
+      }
+      .card{
+          display: flex;
+          flex-wrap: wrap;
+          padding-left: 10%;
+          padding-top: 15%;
+      }
+      .logo{
+          width:40px;
+          height: 40px;
+          padding-top: 32.5px;
+      }
+      .logo-name{
+        color: white;
+        font-size: 14px;
+        text-transform: capitalize;
+        margin-top: 9px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .logo-tile{
+          width:30%;
+      }
+  </style>
+</head>
+
+<body>
+<div class="main" id="main">
+    <div id="card" class="card"></div>
+</div>
+</body>
+<script>
+        var urls;
+        if(window.QTalkApp.getUrlList){
+              urls = JSON.parse(window.QTalkApp.getUrlList());
+        }else{
+          urls=['https://www.amazon.in/','https://www.myntra.com/','https://www.youtube.com/','https://www.Qura.com/','https://www.instagram.com/','https://twitter.com/']
+        }
+        for(let i=0; i<urls.length;i++){
+            let extract = extractHostname(urls[i]);
+            let parsed = psl.parse(extract);
+            document.getElementById("card").innerHTML += "<a href='"+urls[i]+"' class='logo-tile'><img id="+urls[i]+" class='logo'/><div class='logo-name'>"+parsed.sld+"</div></a>";
+        }
+        function onFaviconLoaded(obj){
+            let extract = extractHostname(obj.url);
+            let parsed = psl.parse(extract);
+            let base64Flag = 'data:image/jpeg;base64,';
+            document.getElementById(obj.url).src = base64Flag + obj.faviconBase64;
+        }
+        function extractHostname(url) {
+              var hostname;
+              //find & remove protocol (http, ftp, etc.) and get hostname
+
+              if (url.indexOf("//") > -1) {
+                  hostname = url.split('/')[2];
+              }
+              else {
+                  hostname = url.split('/')[0];
+              }
+
+              //find & remove port number
+              hostname = hostname.split(':')[0];
+              //find & remove "?"
+              hostname = hostname.split('?')[0];
+
+              return hostname;
+          }
+          function arrayBufferToBase64(buffer) {
+              var binary = '';
+              var bytes = [].slice.call(new Uint8Array(buffer));
+              bytes.forEach((b) => binary += String.fromCharCode(b));
+              return window.btoa(binary);
+          };
+    </script>
+</html>
