@@ -1,3 +1,11 @@
+# From v2.9:
+
+## New Features
+* Adds feature to emulate QTalk calls which write participant info
+
+#### Updated Dependencies
+* Updates dependencies
+
 # From v2.8:
 
 # Major Changes
