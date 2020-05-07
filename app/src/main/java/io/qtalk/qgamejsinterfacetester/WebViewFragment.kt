@@ -36,6 +36,7 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
 
         private const val ARG_URL_STRING = "arg-url"
         private const val ARG_INTERACTION_TYPE = "arg-interaction-type"
+        private const val ARG_WRITE_PARTICIPANT_INFO = "arg-write-participant-info"
 
         private const val RTDB_CHILD_CALL_DETAILS = "clDts"
         private const val RTDB_CHILD_PARTICIPANTS = "prtcpnts"
@@ -53,12 +54,14 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
 
         fun init(
             url: String,
-            interactionType: InteractionType = InteractionType.IN_CALL
+            interactionType: InteractionType = InteractionType.IN_CALL,
+            shouldWriteParticipantInfo: Boolean = false
         ): WebViewFragment {
             return WebViewFragment().apply {
                 arguments = Bundle(1).also {
                     it.putString(ARG_URL_STRING, url)
                     it.putString(ARG_INTERACTION_TYPE, interactionType.name)
+                    it.putBoolean(ARG_WRITE_PARTICIPANT_INFO, shouldWriteParticipantInfo)
                 }
             }
         }
@@ -71,6 +74,8 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
     private lateinit var jsInterface: JSInterface
 
     private lateinit var rtdbReference: DatabaseReference
+
+    private var shouldWriteParticipantInfo: Boolean = false
 
     private val gson by lazy {
         Gson()
@@ -183,6 +188,10 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
             )
         )
 
+        shouldWriteParticipantInfo = arguments?.getBoolean(ARG_WRITE_PARTICIPANT_INFO, false) ?: false
+
+
+
         Log.d("WebViewFragment", "onViewCreated: interaction type: $interactionType")
 
         if (interactionType == InteractionType.WEB_SHARING) {
@@ -236,6 +245,10 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
                         else
                             0
                     )
+            }
+        } else {
+            if (shouldWriteParticipantInfo) {
+                writeParticipantInfoAndCallDetailsToRTDB()
             }
         }
 
