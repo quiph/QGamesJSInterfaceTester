@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
             MaterialDialog(this)
                 .title(text = "Select User")
                 .show {
-                    listItems(items = QTalkTestUsers.values().map { it.displayName }) { _, index, _ ->
+                    listItems(
+                        items = QTalkTestUsers.values().map { it.displayName }) { _, index, _ ->
                         PreferenceManager.writeString(
                             this@MainActivity,
                             PreferenceManager.KEY_SELECTED_USER,
@@ -79,7 +80,12 @@ class MainActivity : AppCompatActivity() {
                     WebViewActivity.startActivity(
                         this,
                         urlToOpen,
-                        if (materialDialog.isCheckPromptChecked()) InteractionType.WEB_SHARING else InteractionType.IN_CALL
+                        interactionType = if (materialDialog.isCheckPromptChecked()) {
+                            InteractionType.WEB_SHARING
+                        } else {
+                            InteractionType.IN_CALL
+                        },
+                        shouldWriteParticipantInfo = participantInfoCheckBox.isChecked
                     )
                 } else if (urlToOpen == "test-url") {
                     materialDialog.dismiss()
