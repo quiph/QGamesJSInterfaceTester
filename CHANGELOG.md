@@ -1,3 +1,17 @@
+# From v3.0:
+
+# Major Changes
+* [f] Adds Remote Debugging capability to WebView
+
+## New Features
+* Adds Remote Debugging capability to WebView
+
+## Bug Fixes
+* Fixes crash in PermissionAwareWebChromeClient.kt
+
+#### Updated Dependencies
+* Kotlin version, gradle version, firebase analytics version and google service version - Suraj Shah
+
 # From v2.9:
 
 ## New Features
