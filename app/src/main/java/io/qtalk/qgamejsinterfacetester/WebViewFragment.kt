@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.ConsoleMessage
+import android.webkit.WebView
 import android.widget.Toast
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -255,6 +256,10 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
         jsInterface = JSInterface(this)
 
         webView.addJavascriptInterface(jsInterface, JS_INTERFACE_OBJECT_NAME)
+
+        // enables remote debugging capabilities via chrome dev tools
+        // ref: https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews
+        WebView.setWebContentsDebuggingEnabled(true)
 
         webView.settings.mediaPlaybackRequiresUserGesture = false
 

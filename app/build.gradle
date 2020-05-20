@@ -10,8 +10,8 @@ android {
         applicationId "io.qtalk.qgamejsinterfacetester"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 19 // cause version name started as 1.0 and version code as 1
-        versionName "3.0"
+        versionCode 20 // cause version name started as 1.0 and version code as 1
+        versionName "3.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -41,7 +41,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.firebase:firebase-analytics:17.4.0'
+    implementation 'com.google.firebase:firebase-analytics:17.4.1'
     implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'androidx.core:core-ktx:1.3.0-rc01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
