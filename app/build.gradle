@@ -10,8 +10,8 @@ android {
         applicationId "io.qtalk.qgamejsinterfacetester"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 20 // cause version name started as 1.0 and version code as 1
-        versionName "3.1"
+        versionCode 21 // cause version name started as 1.0 and version code as 1
+        versionName "3.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
