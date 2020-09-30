@@ -10,10 +10,13 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.afollestad.materialdialogs.checkbox.isCheckPromptChecked
+import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.afollestad.materialdialogs.list.listItems
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import io.qtalk.qgamejsinterfacetester.core.InteractionType
 import io.qtalk.qgamejsinterfacetester.helpers.PreferenceManager
 import io.qtalk.qgamejsinterfacetester.helpers.QTalkTestUsers
@@ -21,6 +24,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private var interactionType: InteractionType = InteractionType.IN_CALL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,19 +77,28 @@ class MainActivity : AppCompatActivity() {
             .negativeButton(text = "Test URL") {
                 openTestUrl()
             }
-            .checkBoxPrompt(text = "Make a preview call", onToggle = null)
-            .input(prefill = getUrlFromPrefOrIntent()) { materialDialog, charSequence ->
-                val urlToOpen = charSequence.toString()
+            .listItemsSingleChoice(
+                R.array.interactionTypes,
+                initialSelection = 1,
+                waitForPositiveButton = false
+            ) { dialog: MaterialDialog, index: Int, text: String ->
+                interactionType = when (index) {
+                    0 -> InteractionType.WEB_SHARING
+                    1 -> InteractionType.IN_CALL
+                    2 -> InteractionType.WEBRTC
+                    else -> InteractionType.IN_CALL
+                }
+            }
+            .input(prefill = getUrlFromPrefOrIntent())
+            .positiveButton { materialDialog ->
+
+                val urlToOpen = materialDialog.getInputField().text.toString()
                 if (urlToOpen.isNotEmpty() && Patterns.WEB_URL.matcher(urlToOpen).matches()) {
                     materialDialog.dismiss()
                     WebViewActivity.startActivity(
                         this,
                         urlToOpen,
-                        interactionType = if (materialDialog.isCheckPromptChecked()) {
-                            InteractionType.WEB_SHARING
-                        } else {
-                            InteractionType.IN_CALL
-                        },
+                        interactionType = interactionType,
                         shouldWriteParticipantInfo = participantInfoCheckBox.isChecked
                     )
                 } else if (urlToOpen == "test-url") {
@@ -94,7 +108,10 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Invalid Url!", Toast.LENGTH_SHORT).show()
                 }
             }
-            .positiveButton { }
+            .onDismiss {
+                // reset interaction type.
+                interactionType = InteractionType.IN_CALL
+            }
             .show()
     }
 
@@ -124,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             mainText.text = "No User selected will return a test token!"
         } else {
             mainText.text = "Current Selected user is: \"${
-            QTalkTestUsers.values().firstOrNull { it.userName == selectedUser }?.displayName
+                QTalkTestUsers.values().firstOrNull { it.userName == selectedUser }?.displayName
             }\""
         }
     }
