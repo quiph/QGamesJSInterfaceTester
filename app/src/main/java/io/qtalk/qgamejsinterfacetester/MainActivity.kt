@@ -11,10 +11,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
-import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
-import com.afollestad.materialdialogs.checkbox.isCheckPromptChecked
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.SingleChoiceListener
 import com.afollestad.materialdialogs.list.listItems
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import io.qtalk.qgamejsinterfacetester.core.InteractionType
@@ -80,15 +79,18 @@ class MainActivity : AppCompatActivity() {
             .listItemsSingleChoice(
                 R.array.interactionTypes,
                 initialSelection = 1,
-                waitForPositiveButton = false
-            ) { dialog: MaterialDialog, index: Int, text: String ->
-                interactionType = when (index) {
-                    0 -> InteractionType.WEB_SHARING
-                    1 -> InteractionType.IN_CALL
-                    2 -> InteractionType.WEBRTC
-                    else -> InteractionType.IN_CALL
+                waitForPositiveButton = false,
+                selection = object: SingleChoiceListener {
+                    override fun invoke(dialog: MaterialDialog, index: Int, text: CharSequence) {
+                        interactionType = when (index) {
+                            0 -> InteractionType.WEB_SHARING
+                            1 -> InteractionType.IN_CALL
+                            2 -> InteractionType.WEBRTC
+                            else -> InteractionType.IN_CALL
+                        }
+                    }
                 }
-            }
+            )
             .input(prefill = getUrlFromPrefOrIntent())
             .positiveButton { materialDialog ->
 
