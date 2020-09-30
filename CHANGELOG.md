@@ -1,3 +1,13 @@
+# From v3.1:
+
+# Minor Changes
+* Added InteractionType.kt of WEBRTC to the url launcher dialog. - Faisal Ahmed
+* Added InteractionType.kt of WEBRTC to the url launcher dialog.
+* Added `getUserDetails()` method to the JSInterface.kt to return user details from the selected TestUsers.
+
+#### Updated Dependencies
+* Kotlin version, gradle version, firebase analytics version and google service version - Suraj Shah
+
 # From v3.0:
 
 # Major Changes
