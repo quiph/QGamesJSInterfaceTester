@@ -1,6 +1,7 @@
 package io.qtalk.qgamejsinterfacetester.core
 
 import android.webkit.JavascriptInterface
+import androidx.annotation.Keep
 
 @Suppress("unused")
 class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
@@ -64,6 +65,11 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
         jsInterfaceBridge?.clearWebViewCache()
     }
 
+    @JavascriptInterface
+    fun getUserDetails(): String {
+        return jsInterfaceBridge?.getUserDetails() ?: ""
+    }
+
     interface JSInterfaceBridge {
 
         fun getUserAuthToken(): String
@@ -82,7 +88,16 @@ class JSInterface(private var jsInterfaceBridge: JSInterfaceBridge? = null) {
 
         fun pushAnalyticsEvent(eventJson: String)
 
+        fun getUserDetails(): String
+
         // test only
         fun clearWebViewCache()
     }
+
+    @Keep
+    data class UserDetails(
+        val uid: String,
+        val userName: String,
+        val avatarUrl: String
+    )
 }

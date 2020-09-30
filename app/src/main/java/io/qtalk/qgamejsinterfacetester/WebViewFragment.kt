@@ -189,7 +189,8 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
             )
         )
 
-        shouldWriteParticipantInfo = arguments?.getBoolean(ARG_WRITE_PARTICIPANT_INFO, false) ?: false
+        shouldWriteParticipantInfo =
+            arguments?.getBoolean(ARG_WRITE_PARTICIPANT_INFO, false) ?: false
 
 
 
@@ -335,12 +336,13 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
                 |Analytics Event Pushed:
                 |Event name: ${analyticsEvent.eventName}
                 |Params: 
-                |${analyticsEvent
-                    .eventParameters
-                    .entries
-                    .joinToString(separator = "\n\t", prefix = "\t") {
-                        "${it.key}:${it.value}"
-                    }
+                |${
+                    analyticsEvent
+                        .eventParameters
+                        .entries
+                        .joinToString(separator = "\n\t", prefix = "\t") {
+                            "${it.key}:${it.value}"
+                        }
                 }
             |""".trimMargin(),
                 Toast.LENGTH_LONG
@@ -367,6 +369,21 @@ class WebViewFragment : PermissionAwareWebViewFragment(), JSInterface.JSInterfac
 
     override fun saveBase64Image(base64EncodedImageString: String) {
         Log.d("JSInterfaceBridge", "onBase64ImageSaved() called $base64EncodedImageString")
+    }
+
+    override fun getUserDetails(): String {
+        val selectedUser = getSelectedTestUser()
+            ?: run {
+                Toast.makeText(context, "No Test User Selected!!", Toast.LENGTH_LONG).show()
+                return ""
+            }
+        return gson.toJson(
+            JSInterface.UserDetails(
+                selectedUser.userIdRemote,
+                selectedUser.userName,
+                selectedUser.avatarUrl
+            )
+        )
     }
 
     // test only
