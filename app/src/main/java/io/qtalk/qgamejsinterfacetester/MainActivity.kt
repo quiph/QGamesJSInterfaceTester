@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
-    
+
     private var interactionType: InteractionType = InteractionType.IN_CALL
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,8 +77,12 @@ class MainActivity : AppCompatActivity() {
             .negativeButton(text = "Test URL") {
                 openTestUrl()
             }
-            .listItemsSingleChoice(R.array.interactionTypes, initialSelection = 1, waitForPositiveButton = false){ dialog: MaterialDialog, index: Int, text: String ->
-                interactionType = when(index){
+            .listItemsSingleChoice(
+                R.array.interactionTypes,
+                initialSelection = 1,
+                waitForPositiveButton = false
+            ) { dialog: MaterialDialog, index: Int, text: String ->
+                interactionType = when (index) {
                     0 -> InteractionType.WEB_SHARING
                     1 -> InteractionType.IN_CALL
                     2 -> InteractionType.WEBRTC
@@ -137,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             mainText.text = "No User selected will return a test token!"
         } else {
             mainText.text = "Current Selected user is: \"${
-            QTalkTestUsers.values().firstOrNull { it.userName == selectedUser }?.displayName
+                QTalkTestUsers.values().firstOrNull { it.userName == selectedUser }?.displayName
             }\""
         }
     }

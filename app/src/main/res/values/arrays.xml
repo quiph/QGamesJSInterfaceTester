@@ -3,6 +3,6 @@
     <array name="interactionTypes">
         <item>"Web Share"</item>
         <item>"In Call"</item>
-        <item>"WEBRTC"</item>
+        <item>"WebRTC"</item>
     </array>
 </resources>
